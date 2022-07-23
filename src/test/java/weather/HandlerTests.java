@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,6 +31,7 @@ public class HandlerTests {
 
     @Test
     public void initTest() {
-        handler.handleRequest(eventMap, context);
+        String result = handler.handleRequest(eventMap, context);
+        assertTrue(result.contains("200 OK"));
     }
 }
