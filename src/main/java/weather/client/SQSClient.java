@@ -16,10 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SQSClient {
-    LambdaLogger logger;
     AmazonSQS sqs;
 
-    public SQSClient(LambdaLogger logger) {
+    public SQSClient() {
         AWSCredentials credentials = new BasicAWSCredentials(
                 System.getenv("aws_key"),
                 System.getenv("aws_secret")
@@ -28,7 +27,6 @@ public class SQSClient {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(Regions.EU_WEST_1)
                 .build();
-        this.logger = logger;
     }
 
     public void postMessageToQueue(Map<String, String> attributes, String messageBody, QueuesEnum queue) {
@@ -40,11 +38,6 @@ public class SQSClient {
                 .withQueueUrl(queue.getUrl())
                 .withMessageBody(messageBody)
                 .withMessageAttributes(messageAttributes);
-        try {
-            logger.log("posting message: "+ sendMessage);
-            this.sqs.sendMessage(sendMessage);
-        } catch (Exception e) {
-            logger.log("failed to post to queue: "+ e);
-        }
+        this.sqs.sendMessage(sendMessage);
     }
 }

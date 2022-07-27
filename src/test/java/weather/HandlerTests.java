@@ -17,7 +17,7 @@ import static org.mockito.Mockito.spy;
 public class HandlerTests {
 
     @Spy
-    Handler handler = spy(new Handler());
+    Handler handler;
 
     Map<String, String> eventMap;
     Context context = new TestContext();
