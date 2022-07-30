@@ -16,7 +16,6 @@ import java.util.Map;
 
 public class Handler implements RequestHandler<Object, String> {
     LambdaLogger logger;
-    Gson gson = new Gson();
     WeatherClient weatherClient = new WeatherClient();
     WeatherConditions snorkeling = new Snorkeling();
 
