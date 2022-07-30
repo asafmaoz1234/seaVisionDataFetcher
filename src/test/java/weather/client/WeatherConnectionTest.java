@@ -4,12 +4,11 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.containsString;
+
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class WeatherConnectionTests {
+public class WeatherConnectionTest {
 
     @Test
     public void connectionUrlSetUpCorrectly() throws IOException {
@@ -24,7 +23,6 @@ public class WeatherConnectionTests {
     public void connectionParams() throws IOException {
         HttpURLConnection weatherConnection = WeatherConnection.getConnection();
         assertThat(weatherConnection.getRequestMethod(), is(equalTo("GET")));
-        assertThat(weatherConnection.getRequestProperty("Authorization"), is(equalTo(System.getenv("Authorization"))));
         assertThat(weatherConnection.getConnectTimeout(), is(equalTo(5000)));
     }
 }

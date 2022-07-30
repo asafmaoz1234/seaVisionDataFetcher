@@ -1,7 +1,7 @@
 package weather;
 
 public enum QueuesEnum {
-    EMAIL_QUEUE("https://sqs.eu-west-1.amazonaws.com/353009194243/email_queue", "email_queue", "email_queue_group_id");
+    EMAIL_QUEUE(System.getenv("email_queue_url"), "email_queue", "email_queue_group_id");
 
     private String url;
     private String queueName;

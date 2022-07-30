@@ -1,50 +1,55 @@
 package weather;
 
+import com.amazonaws.auth.policy.actions.SQSActions;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.json.simple.parser.ParseException;
+import com.amazonaws.services.sqs.AmazonSQSClient;
+import com.google.gson.Gson;
 import weather.client.SQSClient;
 import weather.client.WeatherClient;
+import weather.conditions.WeatherConditions;
+import weather.conditions.impl.Snorkeling;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 
 public class Handler implements RequestHandler<Object, String> {
     LambdaLogger logger;
+    Gson gson = new Gson();
     WeatherClient weatherClient = new WeatherClient();
+    WeatherConditions snorkeling = new Snorkeling();
+
+    public Handler() {
+    }
+
+    public Handler(WeatherClient weatherClient, WeatherConditions weatherConditions) {
+        this.weatherClient = weatherClient;
+        this.snorkeling = weatherConditions;
+    }
 
     @Override
     public String handleRequest(Object event, Context context) {
         this.logger = context.getLogger();
         String response = "200 OK";
-        try {
-            List<WeatherParsedResult> weatherData = weatherClient.fetchWeatherData();
-            System.out.println(weatherData);
-        } catch (ParseException | IOException e) {
-            throw new RuntimeException(e);
+        WeatherParsedResult weatherData = weatherClient.fetchWeatherData();
+        logger.log("found: " + weatherData.getHours().size() + " results");
+        if (snorkeling.canGo(weatherData.getHours())) {
+            logger.log("can go snorkeling!");
+            notifyOnSuccess();
         }
-
-        // log execution details
-//        logger.log("ENVIRONMENT VARIABLES: " + gson.toJson(System.getenv()));
-//        logger.log("CONTEXT: " + gson.toJson(context));
-//        // process event
-//        logger.log("EVENT: " + gson.toJson(event));
-//        logger.log("EVENT TYPE: " + event.getClass());
-
         return response;
     }
 
-    private void notifyOnSuccess() {
+    boolean notifyOnSuccess() {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("fromProcess", "weatherLambda");
         attributes.put("to", "asaf@asafmaoz.com");
         logger.log("posting message");
-        new SQSClient()
-                .postMessageToQueue(attributes, "Weather conditions are great!", QueuesEnum.EMAIL_QUEUE);
+        SQSClient.getInstance()
+                .postMessageToQueue(attributes,
+                        "Weather conditions are great for snorkeling!",
+                        QueuesEnum.EMAIL_QUEUE);
+        return true;
     }
 }

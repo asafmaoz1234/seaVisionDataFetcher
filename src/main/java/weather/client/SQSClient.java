@@ -3,9 +3,7 @@ package weather.client;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.MessageAttributeValue;
@@ -16,9 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SQSClient {
+    private static SQSClient sqsClient = null;
     AmazonSQS sqs;
 
-    public SQSClient() {
+    private SQSClient() {
         AWSCredentials credentials = new BasicAWSCredentials(
                 System.getenv("aws_key"),
                 System.getenv("aws_secret")
@@ -27,6 +26,13 @@ public class SQSClient {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(Regions.EU_WEST_1)
                 .build();
+    }
+
+    public static SQSClient getInstance() {
+        if(sqsClient == null) {
+            sqsClient = new SQSClient();
+        }
+        return sqsClient;
     }
 
     public void postMessageToQueue(Map<String, String> attributes, String messageBody, QueuesEnum queue) {

@@ -1,31 +1,63 @@
 package weather;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.json.simple.JSONObject;
+
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WeatherParsedResult {
-    private String time;
-    private JSONObject waveHeight;
+    private List<MetricsPerMeasurment> hours;
 
-    public WeatherParsedResult(String time, JSONObject waveHeight) {
-        this.time = time;
-        this.waveHeight = waveHeight;
+    public List<MetricsPerMeasurment> getHours() {
+        return hours;
     }
 
-    public String getTime() {
-        return time;
+    public void setHours(List<MetricsPerMeasurment> hours) {
+        this.hours = hours;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public static class MetricsPerMeasurment {
+        private String time;
+        private WeatherParamData waveHeight;
+
+        public MetricsPerMeasurment(String time, WeatherParamData waveHeight) {
+            this.time = time;
+            this.waveHeight = waveHeight;
+        }
+
+        public String getTime() {
+            return time;
+        }
+
+        public void setTime(String time) {
+            this.time = time;
+        }
+
+        public WeatherParamData getWaveHeight() {
+            return waveHeight;
+        }
+
+        public void setWaveHeight(WeatherParamData waveHeight) {
+            this.waveHeight = waveHeight;
+        }
     }
 
-    public JSONObject getWaveHeight() {
-        return waveHeight;
-    }
+     public static class WeatherParamData {
+        private Double noaa;
 
-    public void setWaveHeight(JSONObject waveHeight) {
-        this.waveHeight = waveHeight;
+        public WeatherParamData(Double noaa) {
+            this.noaa = noaa;
+         }
+
+        public Double getNoaa() {
+            return noaa;
+        }
+
+        public void setNoaa(Double noaa) {
+            this.noaa = noaa;
+        }
     }
 }
+
+
+
