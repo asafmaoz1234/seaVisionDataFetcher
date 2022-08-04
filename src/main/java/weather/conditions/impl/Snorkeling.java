@@ -1,19 +1,20 @@
 package weather.conditions.impl;
 
-import weather.WeatherParsedResult;
+import weather.pojos.SnorkelingResult;
+import weather.pojos.WeatherParsedResult;
 import weather.conditions.WeatherConditions;
 
 import java.util.List;
 import java.util.logging.Logger;
 
 public class Snorkeling implements WeatherConditions {
-    private Logger logger = Logger.getLogger(Snorkeling.class.getName());
+    private final Logger logger = Logger.getLogger(Snorkeling.class.getName());
     private static final Double MAX_WAVE_FOR_SNORKEL = 0.6;
     private static final Integer MAX_CONSECUTIVE_INFRACTIONS = 4;
     private static final Integer TOTAL_INFRACTIONS_ALLOWED = 8;
 
     @Override
-    public boolean canGo(List<WeatherParsedResult.MetricsPerMeasurment> weatherConditions) {
+    public SnorkelingResult canGo(List<WeatherParsedResult.MetricsPerMeasurment> weatherConditions) {
         int consecutiveInfractions = 0;
         int maxConsecutiveInfractions = 0;
         int totalInfractions = 0;
@@ -31,6 +32,8 @@ public class Snorkeling implements WeatherConditions {
             }
         }
         logger.info("found: " + totalInfractions + " measurements above min, consecutive above min: " + maxConsecutiveInfractions);
-        return maxConsecutiveInfractions < MAX_CONSECUTIVE_INFRACTIONS && totalInfractions < TOTAL_INFRACTIONS_ALLOWED;
+        SnorkelingResult result = new SnorkelingResult(weatherConditions.size(), totalInfractions, consecutiveInfractions);
+        result.setCanGoSnorkeling(maxConsecutiveInfractions < MAX_CONSECUTIVE_INFRACTIONS && totalInfractions < TOTAL_INFRACTIONS_ALLOWED);
+        return result;
     }
 }

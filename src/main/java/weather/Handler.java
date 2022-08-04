@@ -2,21 +2,28 @@ package weather;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.google.gson.Gson;
 import weather.client.SQSClient;
 import weather.client.WeatherClient;
 import weather.conditions.WeatherConditions;
 import weather.conditions.impl.Snorkeling;
+import weather.pojos.HandlerResponse;
+import weather.pojos.WeatherParsedResult;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 public class Handler implements RequestHandler<Object, String> {
     Logger logger = Logger.getLogger(Handler.class.getName());
-    WeatherClient weatherClient = new WeatherClient();
-    WeatherConditions snorkeling = new Snorkeling();
+    Gson gson = new Gson();
+    WeatherClient weatherClient;
+    WeatherConditions snorkeling;
 
     public Handler() {
+        this.weatherClient = new WeatherClient();
+        this.snorkeling = new Snorkeling();
     }
 
     public Handler(WeatherClient weatherClient, WeatherConditions weatherConditions) {
@@ -26,14 +33,14 @@ public class Handler implements RequestHandler<Object, String> {
 
     @Override
     public String handleRequest(Object event, Context context) {
-        String response = "200 OK";
-        WeatherParsedResult weatherData = weatherClient.fetchWeatherData();
-        logger.info("found: " + weatherData.getHours().size() + " results");
-        if (snorkeling.canGo(weatherData.getHours())) {
+        List<WeatherParsedResult.MetricsPerMeasurment> weatherData = weatherClient.fetchWeatherData();
+        logger.info("found: " + weatherData.size() + " results");
+        HandlerResponse handlerResponse = new HandlerResponse(snorkeling.canGo(weatherData));
+        if (handlerResponse.getSnorkelingResults().canGo()) {
             logger.info("can go snorkeling!");
             notifyOnSuccess();
         }
-        return response;
+        return gson.toJson(handlerResponse);
     }
 
     boolean notifyOnSuccess() {

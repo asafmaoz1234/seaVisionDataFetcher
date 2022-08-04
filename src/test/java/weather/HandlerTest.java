@@ -9,6 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import weather.client.WeatherClient;
 import weather.conditions.WeatherConditions;
 import weather.conditions.impl.Snorkeling;
+import weather.pojos.WeatherParsedResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,20 +47,17 @@ public class HandlerTest {
 
     @Test
     public void weatherForSnorkeling_messagePublished() {
-        WeatherParsedResult weatherParsedResult = new WeatherParsedResult();
         List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.5)));
-        weatherParsedResult.setHours(metrics);
-        doReturn(weatherParsedResult).when(weatherClient).fetchWeatherData();
+        doReturn(metrics).when(weatherClient).fetchWeatherData();
         handler.handleRequest(eventMap, context);
         verify(handler, times(1)).notifyOnSuccess();
     }
 
     @Test
     public void weatherNOTForSnorkeling_messagePublished() {
-        WeatherParsedResult weatherParsedResult = new WeatherParsedResult();
         List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
@@ -67,8 +65,7 @@ public class HandlerTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
-        weatherParsedResult.setHours(metrics);
-        doReturn(weatherParsedResult).when(weatherClient).fetchWeatherData();
+        doReturn(metrics).when(weatherClient).fetchWeatherData();
         handler.handleRequest(eventMap, context);
         verify(handler, never()).notifyOnSuccess();
     }

@@ -1,9 +1,10 @@
 package weather.conditions;
 
-import weather.WeatherParsedResult;
+import weather.pojos.SnorkelingResult;
+import weather.pojos.WeatherParsedResult;
 
 import java.util.List;
 
 public interface WeatherConditions {
-    boolean canGo(List<WeatherParsedResult.MetricsPerMeasurment> weatherConditions);
+    SnorkelingResult canGo(List<WeatherParsedResult.MetricsPerMeasurment> weatherConditions);
 }

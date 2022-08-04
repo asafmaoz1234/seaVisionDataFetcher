@@ -2,6 +2,8 @@ package weather;
 
 import org.junit.Test;
 import weather.conditions.impl.Snorkeling;
+import weather.pojos.WeatherParsedResult;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class WeatherConditionsTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.5)));
-        assertTrue(snorkeling.canGo(metrics));
+        assertTrue(snorkeling.canGo(metrics).canGo());
     }
 
     @Test
@@ -29,7 +31,7 @@ public class WeatherConditionsTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
-        assertFalse(snorkeling.canGo(metrics));
+        assertFalse(snorkeling.canGo(metrics).canGo());
     }
 
     @Test
@@ -49,6 +51,6 @@ public class WeatherConditionsTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.1)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.7)));
-        assertFalse(snorkeling.canGo(metrics));
+        assertFalse(snorkeling.canGo(metrics).canGo());
     }
 }

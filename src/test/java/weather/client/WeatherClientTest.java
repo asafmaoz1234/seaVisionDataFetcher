@@ -5,12 +5,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import weather.WeatherParsedResult;
+import weather.pojos.WeatherParsedResult;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
@@ -30,7 +31,7 @@ public class WeatherClientTest {
 
     @Test
     public void validResponse_validParse() {
-        WeatherParsedResult response = weatherClient.fetchWeatherData();
-        assertEquals(response.getHours().size(), 73);
+        List<WeatherParsedResult.MetricsPerMeasurment> response = weatherClient.fetchWeatherData();
+        assertEquals(response.size(), 73);
     }
 }

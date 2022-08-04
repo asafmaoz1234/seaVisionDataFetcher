@@ -1,4 +1,4 @@
-package weather;
+package weather.pojos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
