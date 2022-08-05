@@ -2,13 +2,14 @@ package weather;
 
 import org.junit.Test;
 import weather.conditions.impl.Snorkeling;
+import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
 
 public class WeatherConditionsTest {
 
@@ -20,7 +21,10 @@ public class WeatherConditionsTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.5)));
-        assertTrue(snorkeling.canGo(metrics).canGo());
+        SnorkelingResult snorkelingResult = snorkeling.canGo(metrics);
+        assertTrue(snorkelingResult.canGo());
+        assertEquals((Integer) metrics.size(), snorkelingResult.getReadingCount());
+        assertEquals((Integer) 0, snorkelingResult.getConsecutiveReadingsAboveMinimum());
     }
 
     @Test
@@ -31,7 +35,10 @@ public class WeatherConditionsTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
-        assertFalse(snorkeling.canGo(metrics).canGo());
+        SnorkelingResult snorkelingResult = snorkeling.canGo(metrics);
+        assertFalse(snorkelingResult.canGo());
+        assertEquals((Integer) metrics.size(), snorkelingResult.getReadingCount());
+        assertEquals((Integer) 4, snorkelingResult.getConsecutiveReadingsAboveMinimum());
     }
 
     @Test
@@ -51,6 +58,9 @@ public class WeatherConditionsTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.1)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.7)));
-        assertFalse(snorkeling.canGo(metrics).canGo());
+        SnorkelingResult snorkelingResult = snorkeling.canGo(metrics);
+        assertFalse(snorkelingResult.canGo());
+        assertEquals((Integer) metrics.size(), snorkelingResult.getReadingCount());
+        assertEquals((Integer) 3, snorkelingResult.getConsecutiveReadingsAboveMinimum());
     }
 }

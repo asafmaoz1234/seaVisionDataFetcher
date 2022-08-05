@@ -1,7 +1,9 @@
 package weather;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.google.gson.Gson;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
@@ -9,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import weather.client.WeatherClient;
 import weather.conditions.WeatherConditions;
 import weather.conditions.impl.Snorkeling;
+import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
 
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ public class HandlerTest {
 
     Map<String, String> eventMap;
     Context context = new TestContext();
+    Gson gson = new Gson();
 
     @Before
     public void setUp() {
@@ -43,6 +47,14 @@ public class HandlerTest {
         eventMap = new HashMap<>();
         eventMap.put("key1", "val1");
         eventMap.put("key2", "val2");
+    }
+
+    @Ignore
+    @Test
+    public void testActualData() {
+        String result = handler.handleRequest(eventMap, context);
+        SnorkelingResult snorkelingResult = gson.fromJson(result, SnorkelingResult.class);
+        System.out.println(snorkelingResult);
     }
 
     @Test

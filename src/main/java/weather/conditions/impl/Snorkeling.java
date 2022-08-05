@@ -32,7 +32,7 @@ public class Snorkeling implements WeatherConditions {
             }
         }
         logger.info("found: " + totalInfractions + " measurements above min, consecutive above min: " + maxConsecutiveInfractions);
-        SnorkelingResult result = new SnorkelingResult(weatherConditions.size(), totalInfractions, consecutiveInfractions);
+        SnorkelingResult result = new SnorkelingResult(weatherConditions.size(), totalInfractions, maxConsecutiveInfractions);
         result.setCanGoSnorkeling(maxConsecutiveInfractions < MAX_CONSECUTIVE_INFRACTIONS && totalInfractions < TOTAL_INFRACTIONS_ALLOWED);
         return result;
     }
