@@ -5,7 +5,8 @@ import weather.conditions.impl.Snorkeling;
 import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
 
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -16,7 +17,7 @@ public class WeatherConditionsTest {
 
     @Test
     public void validConditionsForSnorkeling() {
-        Stack<WeatherParsedResult.MetricsPerMeasurment> metrics = new Stack<>();
+        List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.5)));
@@ -28,7 +29,7 @@ public class WeatherConditionsTest {
 
     @Test
     public void aboveMaxConsecutiveInfractions_false() {
-        Stack<WeatherParsedResult.MetricsPerMeasurment> metrics = new Stack<>();
+        List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.7)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
@@ -42,7 +43,7 @@ public class WeatherConditionsTest {
 
     @Test
     public void aboveTotalInfractions_false() {
-        Stack<WeatherParsedResult.MetricsPerMeasurment> metrics = new Stack<>();
+        List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.1)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.7)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.1)));

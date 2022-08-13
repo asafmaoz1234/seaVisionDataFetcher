@@ -2,17 +2,17 @@ package weather.pojos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.Stack;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WeatherParsedResult {
-    private Stack<MetricsPerMeasurment> hours;
+    private List<MetricsPerMeasurment> hours;
 
-    public Stack<MetricsPerMeasurment> getHours() {
+    public List<MetricsPerMeasurment> getHours() {
         return hours;
     }
 
-    public void setHours(Stack<MetricsPerMeasurment> hours) {
+    public void setHours(List<MetricsPerMeasurment> hours) {
         this.hours = hours;
     }
 

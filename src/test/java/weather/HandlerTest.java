@@ -14,9 +14,7 @@ import weather.conditions.impl.Snorkeling;
 import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
@@ -53,7 +51,7 @@ public class HandlerTest {
 
     @Test
     public void weatherForSnorkeling_messagePublished() {
-        Stack<WeatherParsedResult.MetricsPerMeasurment> metrics = new Stack<>();
+        List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.5)));
@@ -64,7 +62,7 @@ public class HandlerTest {
 
     @Test
     public void weatherNOTForSnorkeling_messagePublished() {
-        Stack<WeatherParsedResult.MetricsPerMeasurment> metrics = new Stack<>();
+        List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));

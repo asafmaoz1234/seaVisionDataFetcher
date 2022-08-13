@@ -8,13 +8,11 @@ import weather.client.WeatherClient;
 import weather.conditions.WeatherConditions;
 import weather.conditions.impl.Snorkeling;
 import weather.pojos.HandlerResponse;
-import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.logging.Logger;
 
 public class Handler implements RequestHandler<Object, String> {
@@ -32,7 +30,7 @@ public class Handler implements RequestHandler<Object, String> {
 
     @Override
     public String handleRequest(Object event, Context context) {
-        Stack<WeatherParsedResult.MetricsPerMeasurment> weatherData = weatherClient.fetchWeatherData();
+        List<WeatherParsedResult.MetricsPerMeasurment> weatherData = weatherClient.fetchWeatherData();
         logger.info("found: " + weatherData.size() + " results");
         if(weatherData.isEmpty()) {
             return gson.toJson(new HandlerResponse());
