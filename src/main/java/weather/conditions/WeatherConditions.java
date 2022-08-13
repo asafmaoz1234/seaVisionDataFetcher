@@ -3,8 +3,8 @@ package weather.conditions;
 import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
 
-import java.util.List;
+import java.util.Stack;
 
 public interface WeatherConditions {
-    SnorkelingResult canGo(List<WeatherParsedResult.MetricsPerMeasurment> weatherConditions);
+    SnorkelingResult canGo(Stack<WeatherParsedResult.MetricsPerMeasurment> weatherConditions);
 }
