@@ -4,7 +4,7 @@ import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
 import weather.conditions.WeatherConditions;
 
-import java.util.List;
+import java.util.Stack;
 import java.util.logging.Logger;
 
 public class Snorkeling implements WeatherConditions {
@@ -14,23 +14,25 @@ public class Snorkeling implements WeatherConditions {
     private static final Integer TOTAL_INFRACTIONS_ALLOWED = 8;
 
     @Override
-    public SnorkelingResult canGo(List<WeatherParsedResult.MetricsPerMeasurment> weatherConditions) {
+    public SnorkelingResult canGo(Stack<WeatherParsedResult.MetricsPerMeasurment> weatherConditions) {
         int consecutiveInfractions = 0;
         int maxConsecutiveInfractions = 0;
         int totalInfractions = 0;
 
         logger.info("checking: "+weatherConditions.size()+" results");
-        for (WeatherParsedResult.MetricsPerMeasurment metricsPerMeasurement : weatherConditions) {
-            if (metricsPerMeasurement.getWaveHeight().getNoaa() > MAX_WAVE_FOR_SNORKEL) {
+        while (totalInfractions < TOTAL_INFRACTIONS_ALLOWED && maxConsecutiveInfractions < MAX_CONSECUTIVE_INFRACTIONS && !weatherConditions.isEmpty()) {
+            if(weatherConditions.peek().getWaveHeight().getNoaa() > MAX_WAVE_FOR_SNORKEL) {
                 consecutiveInfractions++;
                 totalInfractions++;
                 if (consecutiveInfractions > maxConsecutiveInfractions) {
                     maxConsecutiveInfractions = consecutiveInfractions;
                 }
-            } else {
+            }else {
                 consecutiveInfractions = 0;
             }
+            weatherConditions.pop();
         }
+
         logger.info("found: " + totalInfractions + " measurements above min, consecutive above min: " + maxConsecutiveInfractions);
         SnorkelingResult result = new SnorkelingResult(weatherConditions.size(), totalInfractions, maxConsecutiveInfractions);
         result.setCanGoSnorkeling(maxConsecutiveInfractions < MAX_CONSECUTIVE_INFRACTIONS && totalInfractions < TOTAL_INFRACTIONS_ALLOWED);

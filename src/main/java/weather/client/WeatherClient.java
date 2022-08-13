@@ -9,17 +9,30 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.logging.Logger;
 
 public class WeatherClient {
     Gson gson = new Gson();
     Logger logger = Logger.getLogger(Handler.class.getName());
+    private Stack<WeatherParsedResult.MetricsPerMeasurment> storedResponse;
+
+    private List<WeatherParsedResult.MetricsPerMeasurment> getStoredResponse() {
+        if(storedResponse != null) {
+            logger.info("using stored response");
+            return storedResponse;
+        }
+        return new Stack<>();
+    }
 
     InputStreamReader getInputStreamFromWeatherEndpoint() throws IOException {
         return new InputStreamReader(WeatherConnection.getConnection().getInputStream());
     }
 
-    public List<WeatherParsedResult.MetricsPerMeasurment> fetchWeatherData() {
+    public Stack<WeatherParsedResult.MetricsPerMeasurment> fetchWeatherData() {
+        if(!getStoredResponse().isEmpty()) {
+            return storedResponse;
+        }
         StringBuilder content;
         try {
             BufferedReader in = new BufferedReader(getInputStreamFromWeatherEndpoint());
@@ -34,7 +47,7 @@ public class WeatherClient {
         }
         WeatherParsedResult weatherParsedResult = gson.fromJson(content.toString(), WeatherParsedResult.class);
         if(weatherParsedResult == null || weatherParsedResult.getHours() == null) {
-            return new ArrayList<>();
+            return new Stack<>();
         }
         return weatherParsedResult.getHours();
     }

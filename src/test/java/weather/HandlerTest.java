@@ -6,47 +6,41 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import weather.client.WeatherClient;
-import weather.conditions.WeatherConditions;
 import weather.conditions.impl.Snorkeling;
 import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.*;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class HandlerTest {
 
     @Spy
-    WeatherClient weatherClient = spy(new WeatherClient());
+    WeatherClient weatherClient;
     @Spy
-    WeatherConditions snorkelingConditions = spy(new Snorkeling());
+    Snorkeling snorkelingConditions;
 
     @Spy
-    Handler handler = spy(new Handler(weatherClient, snorkelingConditions));
+    @InjectMocks
+    Handler handler;
 
 
-    Map<String, String> eventMap;
+    Map<String, String> eventMap = new HashMap<>();
     Context context = new TestContext();
     Gson gson = new Gson();
 
     @Before
     public void setUp() {
         doReturn(true).when(handler).notifyOnSuccess();
-        eventMap = new HashMap<>();
-        eventMap.put("key1", "val1");
-        eventMap.put("key2", "val2");
     }
 
     @Ignore
@@ -59,7 +53,7 @@ public class HandlerTest {
 
     @Test
     public void weatherForSnorkeling_messagePublished() {
-        List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
+        Stack<WeatherParsedResult.MetricsPerMeasurment> metrics = new Stack<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.5)));
@@ -70,7 +64,7 @@ public class HandlerTest {
 
     @Test
     public void weatherNOTForSnorkeling_messagePublished() {
-        List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
+        Stack<WeatherParsedResult.MetricsPerMeasurment> metrics = new Stack<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
