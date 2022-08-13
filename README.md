@@ -1,10 +1,18 @@
 # lambda-beach-time
 
 <div>Description:</div>
-<div>This project is aimed to fetch weather data for a specific geo location and notify me if the weather conditions pass a set of rules and the sea is in the best condition for me to go scubadiving.</div>
+<div>This project is aimed to fetch weather data for a specific geo location publish to sqs queue if weather conditions pass a set of rules indicating conditins are optimal for scubadiving.</div>
 <br>
-<div>This code runs on AWS lambda, so project size is important, that is why im not using Spring for dependency injection or webClient.</div>
+<div>Runs on AWS lambda, triggered by cloudwatch scheduled event.</div>
 <br>
+<ul>
+<li>clone/fork</li>
+<li>set up java lmabda : TBD - cloudfromation template</li>
+<li>set up cloudwatch event : TBD - cloudformation template</li>
+<li>set up sqs queue : TBD - cloudformation template</li>
+<li>set up a user and get access key from stormglass.io</li>
+</ul>
+
 <div>General on the code:</div>
 <ul>
   <li>Using Java 8, maven build</li>
