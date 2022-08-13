@@ -4,6 +4,10 @@ public class HandlerResponse {
     private String message;
     private SnorkelingResult snorkelingResults;
 
+    public HandlerResponse() {
+        this.message = "Invalid response";
+    }
+
     public HandlerResponse(SnorkelingResult snorkelingResult) {
         this.message = "Nope, maybe tomorrow.";
         if(snorkelingResult.canGo()) {

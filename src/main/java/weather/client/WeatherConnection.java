@@ -35,7 +35,7 @@ class WeatherConnection {
     }
 
     public static HttpURLConnection getConnection() throws IOException {
-        if (weatherConnection == null) {
+        if (weatherConnection == null || weatherConnection.connection == null) {
             weatherConnection = new WeatherConnection();
         }
         return weatherConnection.connection;

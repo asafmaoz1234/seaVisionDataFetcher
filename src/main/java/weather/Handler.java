@@ -8,6 +8,7 @@ import weather.client.WeatherClient;
 import weather.conditions.WeatherConditions;
 import weather.conditions.impl.Snorkeling;
 import weather.pojos.HandlerResponse;
+import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
 
 import java.util.HashMap;
@@ -33,6 +34,9 @@ public class Handler implements RequestHandler<Object, String> {
     public String handleRequest(Object event, Context context) {
         Stack<WeatherParsedResult.MetricsPerMeasurment> weatherData = weatherClient.fetchWeatherData();
         logger.info("found: " + weatherData.size() + " results");
+        if(weatherData.isEmpty()) {
+            return gson.toJson(new HandlerResponse());
+        }
         HandlerResponse handlerResponse = new HandlerResponse(snorkeling.canGo(weatherData));
         if (handlerResponse.getSnorkelingResults().canGo()) {
             logger.info("can go snorkeling!");

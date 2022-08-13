@@ -49,6 +49,7 @@ public class WeatherClient {
         if(weatherParsedResult == null || weatherParsedResult.getHours() == null) {
             return new Stack<>();
         }
+        this.storedResponse = weatherParsedResult.getHours();
         return weatherParsedResult.getHours();
     }
 }
