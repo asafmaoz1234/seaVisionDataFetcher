@@ -11,10 +11,10 @@ jobs:
   if_merged:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    name: Update lambda
     steps:
-      - run: |
-          aws lambda update-function-code --function-name weather-java --zip-file fileb://target/lambda-beach-time-1.0-SNAPSHOT.jar
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: 'eu-west-1'
+      - run: aws lambda update-function-code --function-name weather-java --zip-file fileb://target/lambda-beach-time-1.0-SNAPSHOT.jar
+      - env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'eu-west-1'
