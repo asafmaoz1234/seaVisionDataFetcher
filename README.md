@@ -3,12 +3,14 @@
 <div>Description:</div>
 <div>This project is aimed to fetch weather data for a specific geo location publish to sqs queue if weather conditions pass a set of rules indicating conditins are optimal for scubadiving.</div>
 <br>
-<div>Runs on AWS lambda, triggered by cloudwatch scheduled event.</div>
+<div>- Runs on AWS lambda, triggered by cloudwatch scheduled event.</div>
+<div>- The repo is set up with <b>CI-CD</b> on pull requests and merge</div>
 <br>
 <ul>
 <li>clone/fork</li>
 <li>set up java lmabda : TBD - cloudfromation template</li>
 <li>set up cloudwatch event : TBD - cloudformation template</li>
+<li>set up github secrets with aws user/secret, for CI-CD to run using</li>
 <li>set up sqs queue : TBD - cloudformation template</li>
 <li>set up a user and get access key from stormglass.io</li>
 </ul>
