@@ -14,18 +14,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 8
-      uses: actions/setup-java@v3
-      with:
-        java-version: '8'
-        distribution: 'corretto'
-        cache: maven
-        - name: Package it
-          run: mvn package
-    - run: aws lambda update-function-code --function-name weather-java --zip-file /target/lambda-beach-time-1.0-SNAPSHOT.jar
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: 'eu-west-1'
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'corretto'
+          cache: maven
+      - name: Package it
+        run: mvn package
+      - name: Deploy it
+      - run: aws lambda update-function-code --function-name weather-java --zip-file /target/lambda-beach-time-1.0-SNAPSHOT.jar
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'eu-west-1'
 
 
 
