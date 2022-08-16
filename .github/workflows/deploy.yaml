@@ -4,12 +4,12 @@ on:
   pull_request:
     branches:
       - main
-    types:
-      - closed
+#    types:
+#      - closed
 
 jobs:
   if_merged:
-    if: github.event.pull_request.merged == true
+#    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,14 +22,15 @@ jobs:
       - name: Package it
         run: mvn package
       - name: Deploy it
-      - run: aws lambda update-function-code --function-name weather-java --zip-file /target/lambda-beach-time-1.0-SNAPSHOT.jar
+#        uses: actions/checkout@v3
+        run: aws lambda update-function-code --function-name weather-java --zip-file fileb://target/lambda-beach-time-1.0-SNAPSHOT.jar
         env:
+#          lambda-name: 'weather-java'
+#          zip_file: '/target/lambda-beach-time-1.0-SNAPSHOT.jar'
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: 'eu-west-1'
 
 
 
-## TODO
-  ## build jar and change file path
   ## add actual secrets
