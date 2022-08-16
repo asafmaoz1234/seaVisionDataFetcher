@@ -19,17 +19,11 @@ jobs:
           java-version: '8'
           distribution: 'corretto'
           cache: maven
-      - name: Package it
+      - name: Package to jar
         run: mvn package
       - name: Deploy it
-      - run: aws lambda update-function-code --function-name weather-java --zip-file /target/lambda-beach-time-1.0-SNAPSHOT.jar
+        run: aws lambda update-function-code --function-name weather-java --zip-file fileb://target/lambda-beach-time-1.0-SNAPSHOT.jar
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: 'eu-west-1'
-
-
-
-## TODO
-  ## build jar and change file path
-  ## add actual secrets
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
