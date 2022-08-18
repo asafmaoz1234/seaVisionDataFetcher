@@ -22,7 +22,7 @@ jobs:
       - name: Package to jar
         run: mvn package
       - name: update lambda 
-        uses: asafmaoz1234/aws-lambda-update-jar-action@1.1
+        uses: asafmaoz1234/aws-lambda-update-jar-action@v1.0
         with:
           lambda-name: 'weather-java'
           snapshot-name: 'lambda-beach-time-1.0-SNAPSHOT.jar'
