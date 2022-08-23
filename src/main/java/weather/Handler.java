@@ -33,14 +33,14 @@ public class Handler implements RequestHandler<Object, String> {
         List<WeatherParsedResult.MetricsPerMeasurment> weatherData = weatherClient.fetchWeatherData();
         logger.info("found: " + weatherData.size() + " results");
         if(weatherData.isEmpty()) {
-            return gson.toJson(new HandlerResponse());
+            return new HandlerResponse().toString();
         }
-        HandlerResponse handlerResponse = new HandlerResponse(snorkeling.canGo(weatherData));
+        HandlerResponse handlerResponse = new HandlerResponse(snorkeling.analyzeMeasurements(weatherData));
         if (handlerResponse.getSnorkelingResults().canGo()) {
             logger.info("can go snorkeling!");
             notifyOnSuccess();
         }
-        return gson.toJson(handlerResponse);
+        return handlerResponse.toString();
     }
 
     boolean notifyOnSuccess() {
