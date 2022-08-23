@@ -43,4 +43,14 @@ public class SnorkelingResult {
     public void setConsecutiveReadingsAboveMinimum(Integer consecutiveReadingsAboveMinimum) {
         this.consecutiveReadingsAboveMinimum = consecutiveReadingsAboveMinimum;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "canGoSnorkeling=" + canGoSnorkeling +
+                ", readingCount=" + readingCount +
+                ", readingsAboveMinimum=" + readingsAboveMinimum +
+                ", consecutiveReadingsAboveMinimum=" + consecutiveReadingsAboveMinimum +
+                '}';
+    }
 }
