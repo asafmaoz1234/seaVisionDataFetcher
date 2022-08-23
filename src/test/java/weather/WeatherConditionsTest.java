@@ -21,7 +21,7 @@ public class WeatherConditionsTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.5)));
-        SnorkelingResult snorkelingResult = snorkeling.canGo(metrics);
+        SnorkelingResult snorkelingResult = snorkeling.analyzeMeasurements(metrics);
         assertTrue(snorkelingResult.canGo());
         assertEquals((Integer) metrics.size(), snorkelingResult.getReadingCount());
         assertEquals((Integer) 0, snorkelingResult.getConsecutiveReadingsAboveMinimum());
@@ -35,7 +35,7 @@ public class WeatherConditionsTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
-        SnorkelingResult snorkelingResult = snorkeling.canGo(metrics);
+        SnorkelingResult snorkelingResult = snorkeling.analyzeMeasurements(metrics);
         assertFalse(snorkelingResult.canGo());
         assertEquals((Integer) metrics.size(), snorkelingResult.getReadingCount());
         assertEquals((Integer) 4, snorkelingResult.getConsecutiveReadingsAboveMinimum());
@@ -58,7 +58,7 @@ public class WeatherConditionsTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.1)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.7)));
-        SnorkelingResult snorkelingResult = snorkeling.canGo(metrics);
+        SnorkelingResult snorkelingResult = snorkeling.analyzeMeasurements(metrics);
         assertFalse(snorkelingResult.canGo());
         assertEquals((Integer) metrics.size(), snorkelingResult.getReadingCount());
         assertEquals((Integer) 3, snorkelingResult.getConsecutiveReadingsAboveMinimum());

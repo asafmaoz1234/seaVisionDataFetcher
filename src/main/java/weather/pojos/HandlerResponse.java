@@ -31,4 +31,12 @@ public class HandlerResponse {
     public void setSnorkelingResults(SnorkelingResult snorkelingResults) {
         this.snorkelingResults = snorkelingResults;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "message='" + message + '\'' +
+                ", snorkelingResults=" + snorkelingResults +
+                '}';
+    }
 }
