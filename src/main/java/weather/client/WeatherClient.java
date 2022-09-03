@@ -2,6 +2,7 @@ package weather.client;
 
 import com.google.gson.Gson;
 import weather.Handler;
+import weather.exceptions.ClientException;
 import weather.pojos.WeatherParsedResult;
 
 import java.io.BufferedReader;
@@ -28,7 +29,7 @@ public class WeatherClient {
         return new InputStreamReader(WeatherConnection.getConnection().getInputStream());
     }
 
-    public List<WeatherParsedResult.MetricsPerMeasurment> fetchWeatherData() {
+    public List<WeatherParsedResult.MetricsPerMeasurment> fetchWeatherData() throws ClientException {
         if(!getStoredResponse().isEmpty()) {
             return storedResponse;
         }
@@ -40,9 +41,9 @@ public class WeatherClient {
             while ((inputLine = in.readLine()) != null) {
                 content.append(inputLine);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.severe("could not complete request for weather data " + e.getMessage());
-            throw new RuntimeException(e);
+            throw new ClientException("error message: " + e.getMessage());
         }
         WeatherParsedResult weatherParsedResult = gson.fromJson(content.toString(), WeatherParsedResult.class);
         if(weatherParsedResult == null || weatherParsedResult.getHours() == null) {
