@@ -15,8 +15,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WeatherClientTest {
@@ -28,6 +27,12 @@ public class WeatherClientTest {
     public void setUP() throws IOException {
         this.targetStream = new InputStreamReader(Files.newInputStream(new File("src/test/resources/sample_response.txt").toPath()));
         doReturn(this.targetStream).when(weatherClient).getInputStreamFromWeatherEndpoint();
+    }
+
+    @Test(expected = ClientException.class)
+    public void exceptionFromApi_ClientExceptionThrown() throws IOException, ClientException {
+        doThrow(IOException.class).when(weatherClient).getInputStreamFromWeatherEndpoint();
+        weatherClient.fetchWeatherData();
     }
 
     @Test
