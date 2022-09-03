@@ -44,6 +44,7 @@ public class Handler implements RequestHandler<Object, String> {
         if(weatherData.isEmpty()) {
             return new HandlerResponse().toString();
         }
+
         HandlerResponse handlerResponse = new HandlerResponse(snorkeling.analyzeMeasurements(weatherData));
         if (handlerResponse.getSnorkelingResults().canGo()) {
             logger.info("can go snorkeling!");

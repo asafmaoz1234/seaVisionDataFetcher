@@ -40,6 +40,7 @@ public class HandlerTest {
     @Before
     public void setUp() {
         doReturn(true).when(handler).notifyOnSuccess();
+        doReturn(true).when(handler).notifyOnError(any());
     }
 
     @Ignore
@@ -48,6 +49,14 @@ public class HandlerTest {
         String result = handler.handleRequest(eventMap, context);
         SnorkelingResult snorkelingResult = gson.fromJson(result, SnorkelingResult.class);
         System.out.println(snorkelingResult);
+    }
+
+    @Test
+    public void clientThrewException_errorMessagePublished() throws ClientException {
+        doThrow(ClientException.class).when(weatherClient).fetchWeatherData();
+        handler.handleRequest(eventMap, context);
+        verify(handler, times(1)).notifyOnError(any());
+        verify(handler, never()).notifyOnSuccess();
     }
 
     @Test
