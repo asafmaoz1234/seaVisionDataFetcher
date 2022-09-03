@@ -11,6 +11,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import weather.client.WeatherClient;
 import weather.conditions.impl.Snorkeling;
+import weather.exceptions.ClientException;
 import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
 
@@ -50,7 +51,7 @@ public class HandlerTest {
     }
 
     @Test
-    public void weatherForSnorkeling_messagePublished() {
+    public void weatherForSnorkeling_messagePublished() throws ClientException {
         List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
@@ -61,7 +62,7 @@ public class HandlerTest {
     }
 
     @Test
-    public void weatherNOTForSnorkeling_messagePublished() {
+    public void weatherNOTForSnorkeling_messagePublished() throws ClientException {
         List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));

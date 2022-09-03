@@ -7,6 +7,7 @@ import weather.client.SQSClient;
 import weather.client.WeatherClient;
 import weather.conditions.WeatherConditions;
 import weather.conditions.impl.Snorkeling;
+import weather.exceptions.ClientException;
 import weather.pojos.HandlerResponse;
 import weather.pojos.WeatherParsedResult;
 
@@ -30,7 +31,15 @@ public class Handler implements RequestHandler<Object, String> {
 
     @Override
     public String handleRequest(Object event, Context context) {
-        List<WeatherParsedResult.MetricsPerMeasurment> weatherData = weatherClient.fetchWeatherData();
+        List<WeatherParsedResult.MetricsPerMeasurment> weatherData;
+        try {
+            weatherData = weatherClient.fetchWeatherData();
+        } catch (ClientException e) {
+            logger.severe("issue with weather client data: "+e.getMessage());
+            notifyOnError(e.getMessage());
+            return new HandlerResponse().toString();
+        }
+
         logger.info("found: " + weatherData.size() + " results");
         if(weatherData.isEmpty()) {
             return new HandlerResponse().toString();
@@ -42,12 +51,20 @@ public class Handler implements RequestHandler<Object, String> {
         }
         return handlerResponse.toString();
     }
-
+    boolean notifyOnError(String message) {
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("fromProcess", "weatherLambda");
+        attributes.put("to", "asaf@asafmaoz.com");
+        SQSClient.getInstance()
+                .postMessageToQueue(attributes,
+                        "Issue with weather client data! message: "+message,
+                        QueuesEnum.EMAIL_QUEUE);
+        return true;
+    }
     boolean notifyOnSuccess() {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("fromProcess", "weatherLambda");
         attributes.put("to", "asaf@asafmaoz.com");
-        logger.info("posting message");
         SQSClient.getInstance()
                 .postMessageToQueue(attributes,
                         "Weather conditions are great for snorkeling!",

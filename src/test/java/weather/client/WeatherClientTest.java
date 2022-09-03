@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import weather.exceptions.ClientException;
 import weather.pojos.WeatherParsedResult;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class WeatherClientTest {
     }
 
     @Test
-    public void validResponse_validParse() {
+    public void validResponse_validParse() throws ClientException {
         List<WeatherParsedResult.MetricsPerMeasurment> response = weatherClient.fetchWeatherData();
         assertEquals(response.size(), 73);
     }
