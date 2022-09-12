@@ -30,3 +30,12 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+          API_AUTH_KEY: ${{ secrets.API_AUTH_KEY }}
+          API_REQUEST_PARAMS: ${{ secrets.API_REQUEST_PARAMS }}
+          API_REQUEST_POINT_LAT: ${{ secrets.API_REQUEST_POINT_LAT }}
+          API_REQUEST_POINT_LNG: ${{ secrets.API_REQUEST_POINT_LNG }}
+          MAX_WAVE_FOR_SNORKEL: ${{ secrets.MAX_WAVE_FOR_SNORKEL }}
+          API_REQUEST_SOURCE: ${{ secrets.API_REQUEST_SOURCE }}
+          MAX_CONSECUTIVE_INFRACTIONS: ${{ secrets.MAX_CONSECUTIVE_INFRACTIONS }}
+          TOTAL_INFRACTIONS_ALLOWED: ${{ secrets.TOTAL_INFRACTIONS_ALLOWED }}
+          WEATHER_API_BASE_URL: ${{ secrets.WEATHER_API_BASE_URL }}
