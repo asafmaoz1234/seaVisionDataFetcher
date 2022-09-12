@@ -9,20 +9,32 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
+
+import static weather.config.EnvParams.API_REQUEST_POINT_LAT;
+import static weather.config.EnvParams.API_REQUEST_POINT_LNG;
 
 public class WeatherClient {
     Gson gson = new Gson();
     Logger logger = Logger.getLogger(Handler.class.getName());
-    private List<WeatherParsedResult.MetricsPerMeasurment> storedResponse;
+    private Map<String, List<WeatherParsedResult.MetricsPerMeasurment>> storedResponsePerPoint;//storedResponsePerPoint
 
-    private List<WeatherParsedResult.MetricsPerMeasurment> getStoredResponse() {
-        if(storedResponse != null) {
+    private List<WeatherParsedResult.MetricsPerMeasurment> getStoredResponsePerPoint() {
+        if(storedResponsePerPoint != null && !storedResponsePerPoint.get(API_REQUEST_POINT_LAT+API_REQUEST_POINT_LNG).isEmpty()) {
             logger.info("using stored response");
-            return storedResponse;
+            return storedResponsePerPoint.get(API_REQUEST_POINT_LAT+API_REQUEST_POINT_LNG);
         }
         return new ArrayList<>();
+    }
+
+    private void setStoredResponsePerPoint(List<WeatherParsedResult.MetricsPerMeasurment> data) {
+        if(storedResponsePerPoint == null) {
+            storedResponsePerPoint = new HashMap<>();
+        }
+        storedResponsePerPoint.put(API_REQUEST_POINT_LAT+API_REQUEST_POINT_LNG, data);
     }
 
     InputStreamReader getInputStreamFromWeatherEndpoint() throws IOException {
@@ -30,8 +42,8 @@ public class WeatherClient {
     }
 
     public List<WeatherParsedResult.MetricsPerMeasurment> fetchWeatherData() throws ClientException {
-        if(!getStoredResponse().isEmpty()) {
-            return storedResponse;
+        if(!getStoredResponsePerPoint().isEmpty()) {
+            return getStoredResponsePerPoint();
         }
         StringBuilder content;
         try {
@@ -49,7 +61,7 @@ public class WeatherClient {
         if(weatherParsedResult == null || weatherParsedResult.getHours() == null) {
             return new ArrayList<>();
         }
-        this.storedResponse = weatherParsedResult.getHours();
+        this.setStoredResponsePerPoint(weatherParsedResult.getHours());
         return weatherParsedResult.getHours();
     }
 }
