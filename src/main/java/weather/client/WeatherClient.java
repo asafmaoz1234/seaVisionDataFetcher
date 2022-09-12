@@ -2,6 +2,7 @@ package weather.client;
 
 import com.google.gson.Gson;
 import weather.Handler;
+import weather.config.EnvParams;
 import weather.exceptions.ClientException;
 import weather.pojos.WeatherParsedResult;
 
@@ -20,7 +21,7 @@ import static weather.config.EnvParams.API_REQUEST_POINT_LNG;
 public class WeatherClient {
     Gson gson = new Gson();
     Logger logger = Logger.getLogger(Handler.class.getName());
-    private Map<String, List<WeatherParsedResult.MetricsPerMeasurment>> storedResponsePerPoint;//storedResponsePerPoint
+    private Map<String, List<WeatherParsedResult.MetricsPerMeasurment>> storedResponsePerPoint;
 
     private List<WeatherParsedResult.MetricsPerMeasurment> getStoredResponsePerPoint() {
         if(storedResponsePerPoint != null && !storedResponsePerPoint.get(API_REQUEST_POINT_LAT+API_REQUEST_POINT_LNG).isEmpty()) {
@@ -59,7 +60,7 @@ public class WeatherClient {
         }
         WeatherParsedResult weatherParsedResult = gson.fromJson(content.toString(), WeatherParsedResult.class);
         if(weatherParsedResult == null || weatherParsedResult.getHours() == null) {
-            return new ArrayList<>();
+            throw new ClientException("did not get any results from weather client." + EnvParams.stringAllParams());
         }
         this.setStoredResponsePerPoint(weatherParsedResult.getHours());
         return weatherParsedResult.getHours();

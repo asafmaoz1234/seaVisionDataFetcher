@@ -16,5 +16,17 @@ public class EnvParams {
     public static final String AWS_SECRET = System.getenv("AWS_SECRET");
     public static final String SQS_EMAIL_QUEUE_URL = System.getenv("SQS_EMAIL_QUEUE_URL");
 
-
+    public static String stringAllParams() {
+        return "EnvParams{ "+
+                ", WEATHER_API_BASE_URL=" + WEATHER_API_BASE_URL +
+                ", API_REQUEST_POINT_LAT=" + API_REQUEST_POINT_LAT +
+                ", API_REQUEST_POINT_LNG=" + API_REQUEST_POINT_LNG +
+                ", API_REQUEST_PARAMS=" + API_REQUEST_PARAMS +
+                ", API_REQUEST_SOURCE=" + API_REQUEST_SOURCE +
+                ", API_AUTH_KEY=" + API_AUTH_KEY +
+                ", MAX_WAVE_FOR_SNORKEL=" + MAX_WAVE_FOR_SNORKEL +
+                ", MAX_CONSECUTIVE_INFRACTIONS=" + MAX_CONSECUTIVE_INFRACTIONS +
+                ", TOTAL_INFRACTIONS_ALLOWED=" + TOTAL_INFRACTIONS_ALLOWED +
+        '}';
+    }
 }
