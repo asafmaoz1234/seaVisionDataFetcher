@@ -1,4 +1,4 @@
-# lambda-beach-time
+# Sea visibility service
 
 <div>Description:</div> 
 <div>This project is aimed to fetch weather data for a specific geo location point, check weather and weaves conditions and publish to sqs queue if conditions pass a set of rules indicating optimal sea vissibility for scubadiving/snorkeling.</div>
