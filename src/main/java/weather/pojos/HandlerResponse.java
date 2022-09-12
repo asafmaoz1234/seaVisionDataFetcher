@@ -1,5 +1,8 @@
 package weather.pojos;
 
+import static weather.config.EnvParams.API_REQUEST_POINT_LAT;
+import static weather.config.EnvParams.API_REQUEST_POINT_LNG;
+
 public class HandlerResponse {
     private String message;
     private SnorkelingResult snorkelingResults;
@@ -37,6 +40,7 @@ public class HandlerResponse {
         return "{" +
                 "message='" + message + '\'' +
                 ", snorkelingResults=" + snorkelingResults +
+                ", pointChecked=" +  API_REQUEST_POINT_LAT+API_REQUEST_POINT_LNG +
                 '}';
     }
 }

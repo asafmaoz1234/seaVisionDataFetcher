@@ -54,7 +54,7 @@ public class Handler implements RequestHandler<Object, String> {
     }
     boolean notifyOnError(String message) {
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("fromProcess", "weatherLambda");
+        attributes.put("fromProcess", "snorkeling.notifications");
         attributes.put("to", "asaf@asafmaoz.com");
         SQSClient.getInstance()
                 .postMessageToQueue(attributes,
@@ -64,7 +64,7 @@ public class Handler implements RequestHandler<Object, String> {
     }
     boolean notifyOnSuccess() {
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("fromProcess", "weatherLambda");
+        attributes.put("fromProcess", "snorkeling.notifications");
         attributes.put("to", "asaf@asafmaoz.com");
         SQSClient.getInstance()
                 .postMessageToQueue(attributes,
