@@ -15,8 +15,10 @@ public class WeatherConnectionTest {
         HttpURLConnection weatherConnection = WeatherConnection.getConnection();
         URL url = weatherConnection.getURL();
         assertThat(url.getProtocol(), is(equalTo("https")));
-        assertThat(url.getHost(), is(equalTo("api.stormglass.io")));
-        assertThat(url.getQuery(), containsString("lat=32.578070&lng=34.908739&params=waveHeight&source=noaa"));
+        assertThat(url.getQuery(), containsString("lat="));
+        assertThat(url.getQuery(), containsString("&lng="));
+        assertThat(url.getQuery(), containsString("&params="));
+        assertThat(url.getQuery(), containsString("&source=noaa"));
     }
 
     @Test

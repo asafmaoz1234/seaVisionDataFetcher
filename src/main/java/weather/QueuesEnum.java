@@ -1,7 +1,9 @@
 package weather;
 
+import static weather.config.EnvParams.SQS_EMAIL_QUEUE_URL;
+
 public enum QueuesEnum {
-    EMAIL_QUEUE(System.getenv("email_queue_url"), "email_queue", "email_queue_group_id");
+    EMAIL_QUEUE(SQS_EMAIL_QUEUE_URL, "email_queue", "email_queue_group_id");
 
     private String url;
     private String queueName;

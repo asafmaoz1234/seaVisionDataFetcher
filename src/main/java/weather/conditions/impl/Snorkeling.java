@@ -7,12 +7,10 @@ import weather.conditions.WeatherConditions;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static weather.config.EnvParams.*;
+
 public class Snorkeling implements WeatherConditions {
     private final Logger logger = Logger.getLogger(Snorkeling.class.getName());
-    private static final Double MAX_WAVE_FOR_SNORKEL = System.getenv("MAX_WAVE_FOR_SNORKEL") != null ? Double.parseDouble(System.getenv("MAX_WAVE_FOR_SNORKEL")): 0.6;
-    private static final Integer MAX_CONSECUTIVE_INFRACTIONS = System.getenv("MAX_CONSECUTIVE_INFRACTIONS") != null ? Integer.parseInt(System.getenv("MAX_CONSECUTIVE_INFRACTIONS")): 4;
-    private static final Integer TOTAL_INFRACTIONS_ALLOWED = System.getenv("TOTAL_INFRACTIONS_ALLOWED") != null ? Integer.parseInt(System.getenv("TOTAL_INFRACTIONS_ALLOWED")): 8;
-
     @Override
     public SnorkelingResult analyzeMeasurements(List<WeatherParsedResult.MetricsPerMeasurment> totalMeasurements) {
         int consecutiveInfractions = 0;
