@@ -8,29 +8,25 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
 
+import static weather.config.EnvParams.*;
+
 class WeatherConnection {
     private static WeatherConnection weatherConnection = null;
     public HttpURLConnection connection;
-    private final String baseUrl = "https://api.stormglass.io/v2/weather/point";
-    private final String authKey = System.getenv("Authorization");
-    private final String lat = "32.578070";
-    private final String lng = "34.908739";
-    private final String params = "waveHeight";
-    private final String source = "noaa";
 
     private WeatherConnection() throws IOException {
-        String urlString = this.baseUrl +
-                "?lat=" + lat +
-                "&lng=" + lng +
-                "&params=" + params +
-                "&source=" + source +
+        String urlString = WEATHER_API_BASE_URL +
+                "?lat=" + API_REQUEST_POINT_LAT +
+                "&lng=" + API_REQUEST_POINT_LNG +
+                "&params=" + API_REQUEST_PARAMS +
+                "&source=" + API_REQUEST_SOURCE +
                 "&start=" + Instant.now().minus(Duration.ofHours(72)).getEpochSecond() +
-                "&end=" + Instant.now().getEpochSecond();
+                "&end=" + Instant.now().plus(Duration.ofHours(16)).getEpochSecond();
         URL url = new URL(urlString);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod(HttpMethod.GET.name());
         con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", this.authKey);
+        con.setRequestProperty("Authorization", API_AUTH_KEY);
         con.setRequestProperty("Accept", "application/json");
         con.setDoOutput(true);
         con.setConnectTimeout(5000);

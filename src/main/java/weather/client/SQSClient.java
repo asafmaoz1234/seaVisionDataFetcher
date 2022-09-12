@@ -13,14 +13,17 @@ import weather.QueuesEnum;
 import java.util.HashMap;
 import java.util.Map;
 
+import static weather.config.EnvParams.AWS_KEY;
+import static weather.config.EnvParams.AWS_SECRET;
+
 public class SQSClient {
     private static SQSClient sqsClient = null;
     AmazonSQS sqs;
 
     private SQSClient() {
         AWSCredentials credentials = new BasicAWSCredentials(
-                System.getenv("aws_key"),
-                System.getenv("aws_secret")
+                AWS_KEY,
+                AWS_SECRET
         );
         this.sqs = AmazonSQSClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))

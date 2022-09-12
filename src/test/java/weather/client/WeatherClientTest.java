@@ -36,8 +36,17 @@ public class WeatherClientTest {
     }
 
     @Test
-    public void validResponse_validParse() throws ClientException {
+    public void validResponse_validParse() throws ClientException, IOException {
         List<WeatherParsedResult.MetricsPerMeasurment> response = weatherClient.fetchWeatherData();
         assertEquals(response.size(), 73);
+        verify(weatherClient, times(1)).getInputStreamFromWeatherEndpoint();
+    }
+
+    @Test
+    public void validResponseMulti_responseFromStored() throws ClientException, IOException {
+        weatherClient.fetchWeatherData();
+        weatherClient.fetchWeatherData();
+        weatherClient.fetchWeatherData();
+        verify(weatherClient, times(1)).getInputStreamFromWeatherEndpoint();
     }
 }
