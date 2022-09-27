@@ -20,8 +20,8 @@ class WeatherConnection {
                 "&lng=" + API_REQUEST_POINT_LNG +
                 "&params=" + API_REQUEST_PARAMS +
                 "&source=" + API_REQUEST_SOURCE +
-                "&start=" + Instant.now().minus(Duration.ofHours(72)).getEpochSecond() +
-                "&end=" + Instant.now().plus(Duration.ofHours(16)).getEpochSecond();
+                "&start=" + Instant.now().minus(Duration.ofHours(48)).getEpochSecond() +
+                "&end=" + Instant.now().getEpochSecond();
         URL url = new URL(urlString);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod(HttpMethod.GET.name());
