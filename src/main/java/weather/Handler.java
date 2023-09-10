@@ -7,6 +7,7 @@ import weather.client.WeatherClient;
 import weather.conditions.WeatherConditions;
 import weather.conditions.impl.MaxConsecutiveInfractions;
 import weather.conditions.impl.TotalWaveHeightInfractions;
+import weather.enums.QueuesEnum;
 import weather.exceptions.ClientException;
 import weather.pojos.HandlerResponse;
 import weather.pojos.WeatherParsedResult;
@@ -22,6 +23,7 @@ public class Handler implements RequestHandler<Object, String> {
     WeatherClient weatherClient = new WeatherClient();
     List<WeatherConditions> conditions = Arrays.asList(new MaxConsecutiveInfractions(),
             new TotalWaveHeightInfractions());
+    QueuesEnum queuesEnum = QueuesEnum.EMAIL_QUEUE;
 
     public Handler(){}
 
@@ -36,14 +38,18 @@ public class Handler implements RequestHandler<Object, String> {
             weatherData = weatherClient.fetchWeatherData();
         } catch (ClientException e) {
             logger.severe("issue with weather client data: "+e.getMessage());
-            notifyOnError(e.getMessage());
+            queuesEnum.publishToQ("issue with weather client data: did not get any results " + e.getMessage(),
+                    "asaf@asafmaoz.com",
+                    "snorkeling.notifications");
             return new HandlerResponse().toString();
         }
 
         logger.info("found: " + weatherData.size() + " results");
         if(weatherData.isEmpty()) {
             logger.severe("issue with weather client data: did not get any results");
-            notifyOnError("issue with weather client data: did not get any results");
+            queuesEnum.publishToQ("issue with weather client data: did not get any results",
+                    "asaf@asafmaoz.com",
+                    "snorkeling.notifications");
             return new HandlerResponse().toString();
         }
 
@@ -55,28 +61,11 @@ public class Handler implements RequestHandler<Object, String> {
         });
         if (handlerResponse.isAllConditionsPassed()) {
             logger.info("can go snorkeling!");
-            notifyOnSuccess();
+            queuesEnum.publishToQ("Weather conditions are great for snorkeling!",
+                    "asaf@asafmaoz.com",
+                    "snorkeling.notifications");
         }
         return handlerResponse.toString();
     }
-    boolean notifyOnError(String message) {
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("fromProcess", "snorkeling.notifications");
-        attributes.put("to", "asaf@asafmaoz.com");
-        SQSClient.getInstance()
-                .postMessageToQueue(attributes,
-                        "Issue with weather client data! message: "+message,
-                        QueuesEnum.EMAIL_QUEUE);
-        return true;
-    }
-    boolean notifyOnSuccess() {
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put("fromProcess", "snorkeling.notifications");
-        attributes.put("to", "asaf@asafmaoz.com");
-        SQSClient.getInstance()
-                .postMessageToQueue(attributes,
-                        "Weather conditions are great for snorkeling!",
-                        QueuesEnum.EMAIL_QUEUE);
-        return true;
-    }
+
 }
