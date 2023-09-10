@@ -47,13 +47,13 @@ public class Handler implements RequestHandler<Object, String> {
             return new HandlerResponse().toString();
         }
 
-        HandlerResponse handlerResponse = new HandlerResponse();
+        HandlerResponse handlerResponse = new HandlerResponse(true);
         this.conditions.forEach(cond-> {
             if(!cond.conditionPassed(weatherData)) {
-                handlerResponse.getSnorkelingResults().setCanGoSnorkeling(false);
+                handlerResponse.setAllConditionsPassed(false);
             }
         });
-        if (handlerResponse.getSnorkelingResults().canGo()) {
+        if (handlerResponse.isAllConditionsPassed()) {
             logger.info("can go snorkeling!");
             notifyOnSuccess();
         }
