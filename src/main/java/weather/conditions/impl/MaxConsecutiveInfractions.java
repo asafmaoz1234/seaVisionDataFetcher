@@ -14,7 +14,7 @@ public class MaxConsecutiveInfractions implements WeatherConditions {
 
     @Override
     public boolean conditionPassed(List<WeatherParsedResult.MetricsPerMeasurment> weatherConditions) {
-        logger.info("checking: TotalWaveHeightInfractions rule");
+        logger.info("checking: MaxConsecutiveInfractions rule");
         int consecutiveInfractions = 0;
         int maxConsecutiveInfractions = 0;
         for (WeatherParsedResult.MetricsPerMeasurment metricsPerMeasurement : weatherConditions) {
