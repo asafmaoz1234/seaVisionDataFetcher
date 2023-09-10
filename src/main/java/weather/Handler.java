@@ -2,15 +2,16 @@ package weather;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.google.gson.Gson;
 import weather.client.SQSClient;
 import weather.client.WeatherClient;
 import weather.conditions.WeatherConditions;
-import weather.conditions.impl.Snorkeling;
+import weather.conditions.impl.MaxConsecutiveInfractions;
+import weather.conditions.impl.TotalWaveHeightInfractions;
 import weather.exceptions.ClientException;
 import weather.pojos.HandlerResponse;
 import weather.pojos.WeatherParsedResult;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,15 +19,14 @@ import java.util.logging.Logger;
 
 public class Handler implements RequestHandler<Object, String> {
     Logger logger = Logger.getLogger(Handler.class.getName());
-    Gson gson = new Gson();
     WeatherClient weatherClient = new WeatherClient();
-    WeatherConditions snorkeling = new Snorkeling();
+    List<WeatherConditions> conditions = Arrays.asList(new MaxConsecutiveInfractions(),
+            new TotalWaveHeightInfractions());
 
     public Handler(){}
 
-    public Handler(WeatherClient weatherClient, WeatherConditions weatherConditions) {
+    public Handler(WeatherClient weatherClient) {
         this.weatherClient = weatherClient;
-        this.snorkeling = weatherConditions;
     }
 
     @Override
@@ -42,10 +42,17 @@ public class Handler implements RequestHandler<Object, String> {
 
         logger.info("found: " + weatherData.size() + " results");
         if(weatherData.isEmpty()) {
+            logger.severe("issue with weather client data: did not get any results");
+            notifyOnError("issue with weather client data: did not get any results");
             return new HandlerResponse().toString();
         }
 
-        HandlerResponse handlerResponse = new HandlerResponse(snorkeling.analyzeMeasurements(weatherData));
+        HandlerResponse handlerResponse = new HandlerResponse();
+        this.conditions.forEach(cond-> {
+            if(!cond.conditionPassed(weatherData)) {
+                handlerResponse.getSnorkelingResults().setCanGoSnorkeling(false);
+            }
+        });
         if (handlerResponse.getSnorkelingResults().canGo()) {
             logger.info("can go snorkeling!");
             notifyOnSuccess();
