@@ -7,9 +7,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import weather.client.WeatherClient;
+import weather.enums.QueuesEnum;
 import weather.exceptions.ClientException;
 import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
@@ -29,15 +31,13 @@ public class HandlerTest {
     @InjectMocks
     Handler handler;
 
-
     Map<String, String> eventMap = new HashMap<>();
     Context context = new TestContext();
     Gson gson = new Gson();
 
     @Before
     public void setUp() {
-        doReturn(true).when(handler).notifyOnSuccess();
-        doReturn(true).when(handler).notifyOnError(any());
+        this.handler.queuesEnum = mock(QueuesEnum.class);
     }
 
     @Ignore
@@ -52,8 +52,7 @@ public class HandlerTest {
     public void clientThrewException_errorMessagePublished() throws ClientException {
         doThrow(ClientException.class).when(weatherClient).fetchWeatherData();
         handler.handleRequest(eventMap, context);
-        verify(handler, times(1)).notifyOnError(any());
-        verify(handler, never()).notifyOnSuccess();
+        verify(handler.queuesEnum, times(1)).publishToQ(eq("issue with weather client data: did not get any results null"), any(), any());
     }
 
     @Test
@@ -64,7 +63,7 @@ public class HandlerTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.5)));
         doReturn(metrics).when(weatherClient).fetchWeatherData();
         handler.handleRequest(eventMap, context);
-        verify(handler, times(1)).notifyOnSuccess();
+        verify(handler.queuesEnum, times(1)).publishToQ(eq("Weather conditions are great for snorkeling!"), any(), any());
     }
 
     @Test
@@ -78,6 +77,6 @@ public class HandlerTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         doReturn(metrics).when(weatherClient).fetchWeatherData();
         handler.handleRequest(eventMap, context);
-        verify(handler, never()).notifyOnSuccess();
+        verify(handler.queuesEnum, never()).publishToQ(eq("Weather conditions are great for snorkeling!"), any(), any());
     }
 }
