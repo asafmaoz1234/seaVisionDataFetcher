@@ -1,48 +1,52 @@
 package weather;
 
 import org.junit.Test;
-import weather.conditions.impl.Snorkeling;
-import weather.pojos.SnorkelingResult;
+import weather.conditions.WeatherConditions;
+import weather.conditions.impl.MaxConsecutiveInfractions;
+import weather.conditions.impl.TotalWaveHeightInfractions;
 import weather.pojos.WeatherParsedResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class WeatherConditionsTest {
 
-    Snorkeling snorkeling = new Snorkeling();
-
     @Test
     public void validConditionsForSnorkeling() {
+        List<WeatherConditions> conditions = Arrays.asList(new MaxConsecutiveInfractions(),
+                new TotalWaveHeightInfractions());
         List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.5)));
-        SnorkelingResult snorkelingResult = snorkeling.analyzeMeasurements(metrics);
-        assertTrue(snorkelingResult.canGo());
-        assertEquals((Integer) metrics.size(), snorkelingResult.getReadingCount());
-        assertEquals((Integer) 0, snorkelingResult.getConsecutiveReadingsAboveMinimum());
+        boolean canGo = true;
+        for (WeatherConditions condition : conditions) {
+            if (!condition.conditionPassed(metrics)) {
+                canGo = false;
+            }
+        }
+        assertTrue(canGo);
     }
 
     @Test
-    public void aboveMaxConsecutiveInfractions_false() {
+    public void maxConsecutiveInfractions_false() {
         List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("1234", new WeatherParsedResult.WeatherParamData(0.5)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.7)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
-        SnorkelingResult snorkelingResult = snorkeling.analyzeMeasurements(metrics);
-        assertFalse(snorkelingResult.canGo());
-        assertEquals((Integer) metrics.size(), snorkelingResult.getReadingCount());
-        assertEquals((Integer) 4, snorkelingResult.getConsecutiveReadingsAboveMinimum());
+        boolean canGo = new MaxConsecutiveInfractions().conditionPassed(metrics);
+        assertFalse(canGo);
     }
 
     @Test
-    public void aboveTotalInfractions_false() {
+    public void totalWaveHeightInfractions_false() {
         List<WeatherParsedResult.MetricsPerMeasurment> metrics = new ArrayList<>();
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.1)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12345", new WeatherParsedResult.WeatherParamData(0.7)));
@@ -58,9 +62,7 @@ public class WeatherConditionsTest {
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.9)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.1)));
         metrics.add(new WeatherParsedResult.MetricsPerMeasurment("12346", new WeatherParsedResult.WeatherParamData(0.7)));
-        SnorkelingResult snorkelingResult = snorkeling.analyzeMeasurements(metrics);
-        assertFalse(snorkelingResult.canGo());
-        assertEquals((Integer) metrics.size(), snorkelingResult.getReadingCount());
-        assertEquals((Integer) 3, snorkelingResult.getConsecutiveReadingsAboveMinimum());
+        boolean canGo = new TotalWaveHeightInfractions().conditionPassed(metrics);
+        assertFalse(canGo);
     }
 }

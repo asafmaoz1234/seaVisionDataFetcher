@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import weather.client.WeatherClient;
-import weather.conditions.impl.Snorkeling;
 import weather.exceptions.ClientException;
 import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
@@ -25,8 +24,6 @@ public class HandlerTest {
 
     @Spy
     WeatherClient weatherClient;
-    @Spy
-    Snorkeling snorkelingConditions;
 
     @Spy
     @InjectMocks
