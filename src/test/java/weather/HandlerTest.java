@@ -7,13 +7,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import weather.client.WeatherClient;
 import weather.enums.QueuesEnum;
 import weather.exceptions.ClientException;
-import weather.pojos.SnorkelingResult;
 import weather.pojos.WeatherParsedResult;
 
 import java.util.*;
@@ -44,8 +42,7 @@ public class HandlerTest {
     @Test
     public void testActualData() {
         String result = handler.handleRequest(eventMap, context);
-        SnorkelingResult snorkelingResult = gson.fromJson(result, SnorkelingResult.class);
-        System.out.println(snorkelingResult);
+
     }
 
     @Test

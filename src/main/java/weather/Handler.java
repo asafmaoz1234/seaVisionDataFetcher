@@ -4,9 +4,6 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import weather.client.SQSClient;
 import weather.client.WeatherClient;
-import weather.conditions.WeatherConditions;
-import weather.conditions.impl.MaxConsecutiveInfractions;
-import weather.conditions.impl.TotalWaveHeightInfractions;
 import weather.enums.QueuesEnum;
 import weather.exceptions.ClientException;
 import weather.pojos.HandlerResponse;
@@ -21,8 +18,6 @@ import java.util.logging.Logger;
 public class Handler implements RequestHandler<Object, String> {
     Logger logger = Logger.getLogger(Handler.class.getName());
     WeatherClient weatherClient = new WeatherClient();
-    List<WeatherConditions> conditions = Arrays.asList(new MaxConsecutiveInfractions(),
-            new TotalWaveHeightInfractions());
     QueuesEnum queuesEnum = QueuesEnum.EMAIL_QUEUE;
 
     public Handler(){}
@@ -54,11 +49,6 @@ public class Handler implements RequestHandler<Object, String> {
         }
 
         HandlerResponse handlerResponse = new HandlerResponse(true);
-        this.conditions.forEach(cond-> {
-            if(!cond.conditionPassed(weatherData)) {
-                handlerResponse.setAllConditionsPassed(false);
-            }
-        });
         if (handlerResponse.isAllConditionsPassed()) {
             logger.info("can go snorkeling!");
             queuesEnum.publishToQ("Weather conditions are great for snorkeling!",
