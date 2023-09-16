@@ -17,12 +17,13 @@ allowing us to assess sea visibility conditions effectively.<br>
     <img src="https://github.com/asafmaoz1234/website/blob/main/images/lambda-beach-time.png">
   </p>
 </div>
- 
-```
+
+<pre>
+ <p>
 TO DO:
 - Add spring to project
 properties:
-    - use application.yml for properties in test and prod
+    - <s>use application.yml for properties in test and prod</s>
     - modify env params to use inject
 webclient:
     - use reactive client to fetch data
@@ -31,9 +32,7 @@ database:
     - set up reactive data base connection
     - get locations from db
     - store results in db
-
-
-```
-
+</p>
+</pre>
 
  
