@@ -1,12 +1,12 @@
 package com.seavision.seavisiondatafetcher.handlers;
 
-import com.seavision.seavisiondatafetcher.PropertiesTest;
+import com.seavision.seavisiondatafetcher.BaseTest;
 import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class HandlerTest extends PropertiesTest {
+public class HandlerTest extends BaseTest {
 
     @Test
     public void allPropertiesLoaded() {

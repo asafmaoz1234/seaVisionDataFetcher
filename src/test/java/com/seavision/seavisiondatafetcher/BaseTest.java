@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class PropertiesTest {
+public class BaseTest {
 
     @Value("${weather-client.base-url}")
     protected String baseUrl;

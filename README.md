@@ -27,6 +27,8 @@ properties:
     - modify env params to use inject
 webclient:
     - use reactive client to fetch data
+    - add timeouts
+    - change client non blocking
     - modify client to support different geo locations
 database:
     - set up reactive data base connection
