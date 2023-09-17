@@ -3,6 +3,7 @@ package com.seavision.seavisiondatafetcher.clients;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -33,7 +34,8 @@ public class WeatherDataFetcherClient {
     }
 
     public Mono<FetchedData> fetchData(String latitude, String longitude) {
-        return this.client.get().uri(this.buildUri(latitude, longitude))
+        return this.client.get()
+                .uri(this.buildUri(latitude, longitude))
                 .header(HttpHeaders.AUTHORIZATION, this.authKey)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)

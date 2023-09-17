@@ -14,7 +14,8 @@ public class WeatherDataFetcherClientTest extends BaseTest {
     @Test
     public void testit() {
         Mono<FetchedData> fetchedData = weatherDataFetcherClient.fetchData("32.578070", "34.908739");
-        System.out.println(fetchedData.block());
+        FetchedData fetchedDataGet = fetchedData.block();
+        System.out.println(fetchedDataGet);
     }
 
 }
