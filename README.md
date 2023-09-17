@@ -24,12 +24,13 @@ TO DO:
 - Add spring to project
 properties:
     - <s>use application.yml for properties in test and prod</s>
-    - modify env params to use inject
+    - <s>modify env params to use inject</s>
 webclient:
-    - use reactive client to fetch data
+    - <s>use reactive client to fetch data</s>
+    - <s>modify client to support different geo locations</s>
     - add timeouts
     - change client non blocking
-    - modify client to support different geo locations
+    - mock weather api
 database:
     - set up reactive data base connection
     - get locations from db
