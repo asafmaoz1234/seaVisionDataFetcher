@@ -28,11 +28,12 @@ properties:
 webclient:
     - <s>use reactive client to fetch data</s>
     - <s>modify client to support different geo locations</s>
+    - <s>mock weather api</s>
     - add timeouts
     - change client non blocking
-    - mock weather api
+    
 database:
-    - set up reactive data base connection
+    - set up reactive database connection
     - get locations from db
     - store results in db
 </p>
