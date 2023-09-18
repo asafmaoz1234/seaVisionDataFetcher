@@ -10,6 +10,6 @@ public class HandlerTest extends BaseTest {
 
     @Test
     public void allPropertiesLoaded() {
-        assertEquals("https://asafmaoz.com/404", this.baseUrl);
+        assertEquals("http://localhost:8080/stubit/check", this.baseUrl);
     }
 }
