@@ -1,25 +1,27 @@
 version: '3.1'
 
 services:
-  seavisiondatafetcher:
+  seavisiondatafetcher_test:
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/mydb
-      - SPRING_DATASOURCE_USERNAME=mydbuser
-      - SPRING_DATASOURCE_PASSWORD=mydbpass
+      - SPRING_PROFILES_ACTIVE=test
+    env_file:
+      - src/test/resources/application.properties
     depends_on:
-      - db
+      - db_test
 
-  db:
+  db_test:
     image: postgres:13
     environment:
       POSTGRES_DB: mydb
       POSTGRES_USER: mydbuser
       POSTGRES_PASSWORD: mydbpass
+    env_file:
+      - src/test/resources/application.properties
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_test_data:/var/lib/postgresql/data
 
 volumes:
-  db_data:
+  db_test_data:
