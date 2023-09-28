@@ -15,6 +15,8 @@ public class WeatherData{
     private String latitude;
     @Column(name = "metrics_day", nullable = false)
     private String metricsDay;
+    @Column(name = "wave_height", nullable = false)
+    private Double waveHeight;
 
     public WeatherData() {
         super();
@@ -32,6 +34,15 @@ public class WeatherData{
 
     public WeatherData setMetricsDay(String metricsDay) {
         this.metricsDay = metricsDay;
+        return this;
+    }
+
+    public Double getWaveHeight() {
+        return waveHeight;
+    }
+
+    public WeatherData setWaveHeight(Double waveHeight) {
+        this.waveHeight = waveHeight;
         return this;
     }
 
@@ -56,4 +67,5 @@ public class WeatherData{
                 ", metricsDay='" + metricsDay + '\'' +
                 '}';
     }
+
 }
