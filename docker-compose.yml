@@ -7,18 +7,18 @@ services:
       dockerfile: Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=test
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbtest:5432/compose-postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_test:5432/compose-postgres
       - SPRING_DATASOURCE_USERNAME=compose-postgres
       - SPRING_DATASOURCE_PASSWORD=compose-postgres
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     env_file:
       - src/test/resources/application.properties
     depends_on:
-      - dbtest
+      - db_test
 
-  dbtest:
+  db_test:
     image: postgres:13.1-alpine
-    container_name: dbdest
+    container_name: db_dest
     ports:
       - "5432:5432"
     environment:
@@ -28,7 +28,37 @@ services:
     env_file:
       - src/test/resources/application.properties
     volumes:
-      - dbtest_data:/var/lib/postgresql/data
+      - db_test_data:/var/lib/postgresql/data
+
+  seavisiondatafetcher_prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_prod:5432/${POSTGRES_USER}
+      - SPRING_DATASOURCE_USERNAME:${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    env_file:
+      - src/main/resources/application.properties
+    depends_on:
+      - db_prod
+
+  db_prod:
+    image: postgres:13.1-alpine
+    container_name: db_prod
+    ports:
+      - "5432:5432"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - src/main/resources/application.properties
+    volumes:
+       - db_prod_data:/var/lib/postgresql/data
 
 volumes:
-  dbtest_data:
+  db_test_data:
+  db_prod_data:
