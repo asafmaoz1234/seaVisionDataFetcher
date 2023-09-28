@@ -29,7 +29,8 @@ public class WeatherDataTests extends BaseTest {
         weatherRepository.save(new WeatherData()
                 .setMetricsDay(metricDaya)
                 .setLatitude(lat)
-                .setLongitude(lng));
+                .setLongitude(lng)
+                .setWaveHeight(6.5));
         List<WeatherData> response = weatherRepository.findAllByLongitudeAndLatitudeAndMetricsDay(lng,lat, metricDaya);
         assertThat(response.size(), is(equalTo(1)));
         assertThat(response.get(0).getLatitude(), is(equalTo(lat)));
