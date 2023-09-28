@@ -1,15 +1,13 @@
 package com.seavision.seavisiondatafetcher.repositories;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "weather_data")
 public class WeatherData{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "longitude", nullable = false)
     private String longitude;
@@ -22,28 +20,31 @@ public class WeatherData{
         super();
     }
 
-    public String getLongitude() {
-        return longitude;
+    public WeatherData setLongitude(String longitude) {
+        this.longitude = longitude;
+        return this;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public WeatherData setLatitude(String latitude) {
+        this.latitude = latitude;
+        return this;
+    }
+
+    public WeatherData setMetricsDay(String metricsDay) {
+        this.metricsDay = metricsDay;
+        return this;
+    }
+
+    public String getLongitude() {
+        return longitude;
     }
 
     public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
     public String getMetricsDay() {
         return metricsDay;
-    }
-
-    public void setMetricsDay(String day) {
-        this.metricsDay = day;
     }
 
     @Override

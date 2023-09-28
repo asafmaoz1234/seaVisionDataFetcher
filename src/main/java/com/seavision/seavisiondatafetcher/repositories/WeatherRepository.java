@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface WeatherRepository extends JpaRepository<WeatherData, Long> {
     List<WeatherData> findByLongitudeAndLatitude(String longitude, String latitude);
+    List<WeatherData> findAllByLongitudeAndLatitudeAndMetricsDay(String longitude, String latitude, String metricDay);
 }

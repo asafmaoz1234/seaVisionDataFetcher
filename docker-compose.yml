@@ -27,8 +27,8 @@ services:
       - POSTGRES_PASSWORD=compose-postgres
     env_file:
       - src/test/resources/application.properties
-    volumes:
-      - db_test_data:/var/lib/postgresql/data
+#    volumes:
+#      - db_test_data:/var/lib/postgresql/data
 
   seavisiondatafetcher_prod:
     build:
@@ -56,9 +56,9 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     env_file:
       - src/main/resources/application.properties
-    volumes:
-       - db_prod_data:/var/lib/postgresql/data
+#    volumes:
+#       - db_prod_data:/var/lib/postgresql/data
 
-volumes:
-  db_test_data:
-  db_prod_data:
+#volumes:
+#  db_test_data:
+#  db_prod_data:
