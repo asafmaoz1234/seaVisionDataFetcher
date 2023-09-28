@@ -2,13 +2,14 @@ version: '3.1'
 
 services:
   seavisiondatafetcher_test:
+    container_name: seavisiondatafetcher_test
     build:
       context: .
       dockerfile: Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=test
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_test:5432/compose-postgres
-      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_test:5432/metrics-data
+      - SPRING_DATASOURCE_USERNAME=metrics-data
       - SPRING_DATASOURCE_PASSWORD=compose-postgres
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     env_file:
@@ -23,7 +24,7 @@ services:
       - "5432:5432"
     environment:
       - SPRING_PROFILES_ACTIVE=test
-      - POSTGRES_USER=compose-postgres
+      - POSTGRES_USER=metrics-data
       - POSTGRES_PASSWORD=compose-postgres
     env_file:
       - src/test/resources/application.properties
@@ -58,7 +59,7 @@ services:
       - src/main/resources/application.properties
 #    volumes:
 #       - db_prod_data:/var/lib/postgresql/data
-
+#
 #volumes:
 #  db_test_data:
 #  db_prod_data:
