@@ -33,9 +33,11 @@ webclient:
     - change client non blocking
     
 database:
-    - set up reactive database connection
-    - get locations from db
     - store results in db
+    - get locations from db
+    - <s>set up database connection</s>
+    - change to reactive database connection
+    
 </p>
 </pre>
 
