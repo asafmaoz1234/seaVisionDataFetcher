@@ -7,21 +7,28 @@ services:
       dockerfile: Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=test
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbtest:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     env_file:
       - src/test/resources/application.properties
     depends_on:
-      - db_test
+      - dbtest
 
-  db_test:
-    image: postgres:13
+  dbtest:
+    image: postgres:13.1-alpine
+    container_name: dbdest
+    ports:
+      - "5432:5432"
     environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: mydbuser
-      POSTGRES_PASSWORD: mydbpass
+      - SPRING_PROFILES_ACTIVE=test
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
     env_file:
       - src/test/resources/application.properties
     volumes:
-      - db_test_data:/var/lib/postgresql/data
+      - dbtest_data:/var/lib/postgresql/data
 
 volumes:
-  db_test_data:
+  dbtest_data:
