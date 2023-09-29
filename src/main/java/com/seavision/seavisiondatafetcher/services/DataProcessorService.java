@@ -3,9 +3,9 @@ package com.seavision.seavisiondatafetcher.services;
 import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
 import com.seavision.seavisiondatafetcher.dtos.DataPerHour;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
+import com.seavision.seavisiondatafetcher.dtos.Meta;
 import com.seavision.seavisiondatafetcher.repositories.WeatherData;
 import com.seavision.seavisiondatafetcher.repositories.WeatherRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -29,17 +29,16 @@ public class DataProcessorService {
 
     public void processData(String latitude, String longitude) {
         FetchedData fetchedData = this.fetchWeatherData(latitude, longitude);
-        List<WeatherData> weatherDataList = this.extractWeatherData(fetchedData.getHours(), latitude, longitude);
+        List<WeatherData> weatherDataList = this.extractWeatherData(fetchedData.getHours(), fetchedData.getMeta());
         this.weatherRepository.saveAll(weatherDataList);
     }
 
-    private List<WeatherData> extractWeatherData(List<DataPerHour> dataPerHourList, String latitude, String longitude) {
-        String metricsDate = this.convertToDDMMYYYY(dataPerHourList.get(0).getTime());
+    private List<WeatherData> extractWeatherData(List<DataPerHour> dataPerHourList, Meta meta) {
         return dataPerHourList.stream()
                 .map(dataPerHour -> new WeatherData()
-                        .setLatitude(latitude)
-                        .setLongitude(longitude)
-                        .setMetricsDay(metricsDate)
+                        .setLatitude(String.valueOf(meta.getLat()))
+                        .setLongitude(String.valueOf(meta.getLng()))
+                        .setMetricsDay(this.convertToDDMMYYYY(dataPerHour.getTime()))
                         .setWaveHeight(dataPerHour.getWaveHeight().getNoaa()))
                 .collect(Collectors.toList());
     }
@@ -53,7 +52,7 @@ public class DataProcessorService {
         return formattedDate;
     }
 
-    private FetchedData fetchWeatherData(String latitude, String longitude) {
+    protected FetchedData fetchWeatherData(String latitude, String longitude) {
         Mono<FetchedData> weatherData = this.weatherDataFetcherClient.fetchData(latitude, longitude);
         return weatherData.block();
     }
