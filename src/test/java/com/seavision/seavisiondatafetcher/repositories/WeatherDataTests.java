@@ -1,21 +1,31 @@
 package com.seavision.seavisiondatafetcher.repositories;
 
 import com.seavision.seavisiondatafetcher.BaseTest;
-import org.junit.Test;
+import com.seavision.seavisiondatafetcher.dtos.FetchedData;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WeatherDataTests extends BaseTest {
 
     @Autowired
     WeatherRepository weatherRepository;
 
+    @BeforeEach
+    public void setUp() {
+        weatherRepository.deleteAll();
+    }
     @Test
     public void newLongAndLat_emptyResponse() {
         List<WeatherData> response = weatherRepository.findByLongitudeAndLatitude(Math.random()+"", Math.random()+"");

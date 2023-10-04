@@ -1,13 +1,10 @@
 package com.seavision.seavisiondatafetcher.services;
 
 import com.seavision.seavisiondatafetcher.BaseTest;
-//import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
-//import com.seavision.seavisiondatafetcher.repositories.WeatherRepository;
 import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
 import com.seavision.seavisiondatafetcher.repositories.WeatherRepository;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
