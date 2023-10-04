@@ -1,5 +1,6 @@
 package com.seavision.seavisiondatafetcher.services;
 
+import com.seavision.seavisiondatafetcher.Handler;
 import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
 import com.seavision.seavisiondatafetcher.dtos.DataPerHour;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
@@ -11,10 +12,12 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 public class DataProcessorService {
+    Logger logger = Logger.getLogger(DataProcessorService.class.getName());
 
     final
     WeatherRepository weatherRepository;
@@ -29,6 +32,8 @@ public class DataProcessorService {
     public void processData(String latitude, String longitude) {
         FetchedData fetchedData = this.fetchWeatherData(latitude, longitude);
         List<WeatherData> weatherDataList = this.extractWeatherData(fetchedData.getHours(), fetchedData.getMeta());
+        logger.info("Saving " + weatherDataList.size() + " records");
+        logger.info("latitude: " + latitude + " longitude: " + longitude);
         this.weatherRepository.saveAll(weatherDataList);
     }
 
