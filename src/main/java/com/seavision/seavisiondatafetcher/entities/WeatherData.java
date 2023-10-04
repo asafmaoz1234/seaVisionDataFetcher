@@ -67,5 +67,4 @@ public class WeatherData{
                 ", metricsDay='" + metricsDay + '\'' +
                 '}';
     }
-
 }
