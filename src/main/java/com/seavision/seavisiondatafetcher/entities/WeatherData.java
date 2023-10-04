@@ -1,4 +1,4 @@
-package com.seavision.seavisiondatafetcher.repositories;
+package com.seavision.seavisiondatafetcher.entities;
 
 
 import jakarta.persistence.*;

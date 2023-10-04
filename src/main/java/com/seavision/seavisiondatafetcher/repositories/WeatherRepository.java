@@ -1,5 +1,6 @@
 package com.seavision.seavisiondatafetcher.repositories;
 
+import com.seavision.seavisiondatafetcher.entities.WeatherData;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

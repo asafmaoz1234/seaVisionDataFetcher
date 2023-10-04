@@ -3,7 +3,7 @@ package com.seavision.seavisiondatafetcher.services;
 import com.seavision.seavisiondatafetcher.BaseTest;
 import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
-import com.seavision.seavisiondatafetcher.repositories.WeatherData;
+import com.seavision.seavisiondatafetcher.entities.WeatherData;
 import com.seavision.seavisiondatafetcher.repositories.WeatherRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

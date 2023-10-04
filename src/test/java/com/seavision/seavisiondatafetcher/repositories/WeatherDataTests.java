@@ -2,14 +2,13 @@ package com.seavision.seavisiondatafetcher.repositories;
 
 import com.seavision.seavisiondatafetcher.BaseTest;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
+import com.seavision.seavisiondatafetcher.entities.WeatherData;
 import com.seavision.seavisiondatafetcher.pojos.GeneralUtilities;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 

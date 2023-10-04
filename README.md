@@ -33,11 +33,15 @@ webclient:
     - change client non blocking
     
 database:
-    - store results in db
-    - get locations from db
+    - <s>store results in db</s>
     - <s>set up database connection</s>
+    - get locations from db
     - change to reactive database connection
-    
+
+handler:
+    - add handler & test to lambda
+    - log errors
+    - add metrics
 </p>
 </pre>
 

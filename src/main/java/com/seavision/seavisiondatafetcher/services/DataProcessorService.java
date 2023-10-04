@@ -5,13 +5,11 @@ import com.seavision.seavisiondatafetcher.dtos.DataPerHour;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
 import com.seavision.seavisiondatafetcher.dtos.Meta;
 import com.seavision.seavisiondatafetcher.pojos.GeneralUtilities;
-import com.seavision.seavisiondatafetcher.repositories.WeatherData;
+import com.seavision.seavisiondatafetcher.entities.WeatherData;
 import com.seavision.seavisiondatafetcher.repositories.WeatherRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
