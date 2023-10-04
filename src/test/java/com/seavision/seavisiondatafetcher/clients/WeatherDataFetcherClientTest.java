@@ -42,6 +42,14 @@ public class WeatherDataFetcherClientTest extends BaseTest {
         wireMockServer.stop();
     }
 
+//    @Test
+//    public void validResponse_status200() {
+//        Mono<FetchedData> fetchedData = weatherDataFetcherClient.fetchData("32.464527991740894", "34.88256075359062");
+//        FetchedData data = fetchedData.block();
+//        System.out.println(data);
+//        assertThat(data.getMeta().getLat(), is(equalTo(32.464527991740894)));
+//        assertThat(data.getMeta().getLng(), is(equalTo(34.88256075359062)));
+//    }
 
     @Test
     public void validResponse_parsedToObject() throws IOException {
