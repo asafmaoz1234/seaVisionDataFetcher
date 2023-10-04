@@ -2,6 +2,7 @@ package com.seavision.seavisiondatafetcher.repositories;
 
 import com.seavision.seavisiondatafetcher.BaseTest;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
+import com.seavision.seavisiondatafetcher.pojos.GeneralUtilities;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,22 @@ public class WeatherDataTests extends BaseTest {
         assertThat(response.get(0).getLatitude(), is(equalTo(lat)));
         assertThat(response.get(0).getLongitude(), is(equalTo(lng)));
         assertThat(response.get(0).getMetricsDay(), is(equalTo(metricDaya)));
+    }
+
+    @Test
+    public void listWeatherResults_allSaved() throws IOException {
+        FetchedData data = this.loadSampleFetchedData();
+        List<WeatherData> toSave = data.getHours().stream()
+                .map(dataPerHour -> new WeatherData()
+                        .setLatitude(String.valueOf(data.getMeta().getLat()))
+                        .setLongitude(String.valueOf(data.getMeta().getLng()))
+                        .setMetricsDay(GeneralUtilities.convertToDDMMYYYY(dataPerHour.getTime()))
+                        .setWaveHeight(dataPerHour.getWaveHeight().getNoaa()))
+                .collect(Collectors.toList());
+        weatherRepository.saveAll(toSave);
+        List<WeatherData> response = weatherRepository.findByLongitudeAndLatitude(
+                String.valueOf(data.getMeta().getLng()),
+                String.valueOf(data.getMeta().getLat()));
+        assertThat(response.size(), is(equalTo(73)));
     }
 }

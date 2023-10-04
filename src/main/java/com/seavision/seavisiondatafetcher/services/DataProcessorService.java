@@ -4,6 +4,7 @@ import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
 import com.seavision.seavisiondatafetcher.dtos.DataPerHour;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
 import com.seavision.seavisiondatafetcher.dtos.Meta;
+import com.seavision.seavisiondatafetcher.pojos.GeneralUtilities;
 import com.seavision.seavisiondatafetcher.repositories.WeatherData;
 import com.seavision.seavisiondatafetcher.repositories.WeatherRepository;
 import org.springframework.stereotype.Service;
@@ -38,19 +39,11 @@ public class DataProcessorService {
                 .map(dataPerHour -> new WeatherData()
                         .setLatitude(String.valueOf(meta.getLat()))
                         .setLongitude(String.valueOf(meta.getLng()))
-                        .setMetricsDay(this.convertToDDMMYYYY(dataPerHour.getTime()))
+                        .setMetricsDay(GeneralUtilities.convertToDDMMYYYY(dataPerHour.getTime()))
                         .setWaveHeight(dataPerHour.getWaveHeight().getNoaa()))
                 .collect(Collectors.toList());
     }
 
-    private String convertToDDMMYYYY(String inputDate) {
-        OffsetDateTime dateTime = OffsetDateTime.parse(inputDate);
-        // Create a formatter to convert to the desired format
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        // Format the date as a string in the desired format
-        String formattedDate = dateTime.format(formatter);
-        return formattedDate;
-    }
 
     protected FetchedData fetchWeatherData(String latitude, String longitude) {
         Mono<FetchedData> weatherData = this.weatherDataFetcherClient.fetchData(latitude, longitude);
