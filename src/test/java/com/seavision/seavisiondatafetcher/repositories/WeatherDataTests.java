@@ -36,17 +36,17 @@ public class WeatherDataTests extends BaseTest {
     public void insertNewRecord_responseSizeOne() {
         String lat = Math.random()+"";
         String lng = Math.random()+"";
-        String metricDaya = "21/09/2023";
+        String metricDay = "21/09/2023-06";
         weatherRepository.save(new WeatherData()
-                .setMetricsDay(metricDaya)
+                .setMetricsDay(metricDay)
                 .setLatitude(lat)
                 .setLongitude(lng)
                 .setWaveHeight(6.5));
-        List<WeatherData> response = weatherRepository.findAllByLongitudeAndLatitudeAndMetricsDay(lng,lat, metricDaya);
+        List<WeatherData> response = weatherRepository.findAllByLongitudeAndLatitudeAndMetricsDay(lng,lat, metricDay);
         assertThat(response.size(), is(equalTo(1)));
         assertThat(response.get(0).getLatitude(), is(equalTo(lat)));
         assertThat(response.get(0).getLongitude(), is(equalTo(lng)));
-        assertThat(response.get(0).getMetricsDay(), is(equalTo(metricDaya)));
+        assertThat(response.get(0).getMetricsDay(), is(equalTo(metricDay)));
     }
 
     @Test
