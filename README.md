@@ -8,8 +8,9 @@ allowing us to assess sea visibility conditions effectively.<br>
 <br>
 <div>The module runs as an AWS lambda, triggered by CloudWatch event.</div>
 <div>Data is stored on our secured DB's.</div>
-<div><p>github actions - for CI-CD and testing on pull requests.</div>
-<div>Using Java 17, maven build</div>
+<div><p>github actions - for CI-CD and running tests on pull requests.</div>
+<div>Using Spring boot, Java 17, maven build</div>
+<div>Dockerized for local dev</div>
 
 <div>
   <p>The process system design:</p>
