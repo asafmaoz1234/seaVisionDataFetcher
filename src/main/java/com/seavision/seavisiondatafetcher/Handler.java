@@ -1,26 +1,30 @@
 package com.seavision.seavisiondatafetcher;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.seavision.seavisiondatafetcher.entities.Locations;
 import com.seavision.seavisiondatafetcher.repositories.LocationsRepository;
 import com.seavision.seavisiondatafetcher.services.DataProcessorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.logging.Logger;
 
-public class Handler  implements RequestHandler<Object, String> {
+@Service
+public class Handler {
     Logger logger = Logger.getLogger(Handler.class.getName());
 
-    @Autowired
+    final
     DataProcessorService dataProcessorService;
 
-    @Autowired
+    final
     LocationsRepository locationsRepository;
 
-    @Override
-    public String handleRequest(Object o, Context context) {
+    public Handler(DataProcessorService dataProcessorService, LocationsRepository locationsRepository) {
+        this.dataProcessorService = dataProcessorService;
+        this.locationsRepository = locationsRepository;
+    }
+
+
+    public String handleRequest() {
         List<Locations> locations = null;
         try {
             locations = locationsRepository.findAll();
@@ -36,6 +40,6 @@ public class Handler  implements RequestHandler<Object, String> {
                 logger.severe("failed handleRequest: "+e.getMessage());
             }
         });
-        return null;
+        return "Done";
     }
 }
