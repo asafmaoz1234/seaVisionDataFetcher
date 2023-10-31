@@ -13,14 +13,16 @@ allowing us to assess sea visibility conditions effectively.<br>
 
 <div>
   <p>The process system design:</p>
-  <p align="center">
-    <img src="https://github.com/asafmaoz1234/website/blob/main/images/lambda-beach-time.png">
-  </p>
-</div>
 
+[//]: # (  <p align="center">)
+
+[//]: # (    <img src="https://github.com/asafmaoz1234/website/blob/main/images/lambda-beach-time.png">)
+
+[//]: # (  </p>)
+</div>
+<div>To do:</div>
 <pre>
  <p>
-TO DO:
 - Add spring to project
 properties:
     - <s>use application.yml for properties in test and prod</s>
@@ -35,11 +37,12 @@ webclient:
 database:
     - <s>store results in db</s>
     - <s>set up database connection</s>
-    - get locations from db
+    - <s>get locations from db</s>
     - change to reactive database connection
 
 handler:
-    - add handler & test to lambda
+    - <s>add handler</s> 
+    - test to lambda
     - log errors
     - add metrics
 </p>
