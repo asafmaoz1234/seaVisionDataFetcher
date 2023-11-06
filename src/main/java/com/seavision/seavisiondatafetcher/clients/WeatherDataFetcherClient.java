@@ -55,7 +55,7 @@ public class WeatherDataFetcherClient {
                 .queryParam("params", this.reqParams)
                 .queryParam("source", this.reqSource)
                 .queryParam("start",Instant.now().minus(Duration.ofHours(24)).getEpochSecond())
-                .queryParam("end", Instant.now().getEpochSecond())
+                .queryParam("end", Instant.now().plus(Duration.ofHours(24)).getEpochSecond())
                 .build()
                 .toUri();
     }
