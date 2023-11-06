@@ -1,6 +1,5 @@
 package com.seavision.seavisiondatafetcher.services;
 
-import com.seavision.seavisiondatafetcher.Handler;
 import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
 import com.seavision.seavisiondatafetcher.dtos.DataPerHour;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
@@ -29,11 +28,9 @@ public class DataProcessorService {
         this.weatherDataFetcherClient = weatherDataFetcherClient;
     }
 
-    public void processData(String latitude, String longitude) {
-        FetchedData fetchedData = this.fetchWeatherData(latitude, longitude);
+    public void processData(FetchedData fetchedData) {
         List<WeatherData> weatherDataList = this.extractWeatherData(fetchedData.getHours(), fetchedData.getMeta());
         logger.info("Saving " + weatherDataList.size() + " records");
-        logger.info("latitude: " + latitude + " longitude: " + longitude);
         this.weatherRepository.saveAll(weatherDataList);
     }
 
@@ -48,8 +45,7 @@ public class DataProcessorService {
     }
 
 
-    protected FetchedData fetchWeatherData(String latitude, String longitude) {
-        Mono<FetchedData> weatherData = this.weatherDataFetcherClient.fetchData(latitude, longitude);
-        return weatherData.block();
+    public Mono<FetchedData> fetchWeatherData(String latitude, String longitude) {
+        return this.weatherDataFetcherClient.fetchData(latitude, longitude);
     }
 }
