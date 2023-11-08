@@ -40,11 +40,12 @@ public class WeatherDataFetcherClient {
                 .header(HttpHeaders.AUTHORIZATION, this.authKey)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
+                .retrieve()// retrieve the response
                 .onStatus(httpStatusCode -> httpStatusCode.isSameCodeAs(HttpStatus.PAYMENT_REQUIRED), this::handleClientUsageExceededError)
                 .onStatus(httpStatusCode -> httpStatusCode.isSameCodeAs(HttpStatus.FORBIDDEN), this::handleClientAuthError)
                 .onStatus(HttpStatusCode::is5xxServerError, this::handleServerError)
-                .bodyToMono(FetchedData.class);
+                .bodyToMono(FetchedData.class)
+                .timeout(Duration.ofSeconds(2));
     }
 
     URI buildUri(String latitude, String longitude) {
