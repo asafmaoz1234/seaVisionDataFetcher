@@ -20,12 +20,9 @@ public class DataProcessorService {
 
     final
     WeatherRepository weatherRepository;
-    final
-    WeatherDataFetcherClient weatherDataFetcherClient;
 
-    public DataProcessorService(WeatherRepository weatherRepository, WeatherDataFetcherClient weatherDataFetcherClient) {
+    public DataProcessorService(WeatherRepository weatherRepository) {
         this.weatherRepository = weatherRepository;
-        this.weatherDataFetcherClient = weatherDataFetcherClient;
     }
 
     public void processData(FetchedData fetchedData) {
@@ -44,8 +41,4 @@ public class DataProcessorService {
                 .collect(Collectors.toList());
     }
 
-
-    public Mono<FetchedData> fetchWeatherData(String latitude, String longitude) {
-        return this.weatherDataFetcherClient.fetchData(latitude, longitude);
-    }
 }

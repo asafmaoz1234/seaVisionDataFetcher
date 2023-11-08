@@ -1,26 +1,15 @@
 package com.seavision.seavisiondatafetcher.services;
 
 import com.seavision.seavisiondatafetcher.BaseTest;
-import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
-import com.seavision.seavisiondatafetcher.dtos.FetchedData;
 import com.seavision.seavisiondatafetcher.entities.WeatherData;
 import com.seavision.seavisiondatafetcher.repositories.WeatherRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
-import java.io.IOException;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 
 public class DataProcessorServiceTests extends BaseTest {
 
-    @Mock
-    private WeatherDataFetcherClient weatherDataFetcherClient;
 
     @Spy
     private WeatherRepository weatherRepository;
@@ -34,7 +23,7 @@ public class DataProcessorServiceTests extends BaseTest {
 
     @BeforeEach
     public void setUp() {
-        this.dataProcessorService = new DataProcessorService(weatherRepository, weatherDataFetcherClient);
+        this.dataProcessorService = new DataProcessorService(weatherRepository);
         MockitoAnnotations.openMocks(this);
     }
 //
