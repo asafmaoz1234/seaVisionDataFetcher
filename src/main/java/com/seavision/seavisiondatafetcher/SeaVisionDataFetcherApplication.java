@@ -1,5 +1,6 @@
 package com.seavision.seavisiondatafetcher;
 
+import com.seavision.seavisiondatafetcher.handlers.Handler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -9,23 +10,16 @@ import java.util.logging.Logger;
 
 @SpringBootApplication
 public class SeaVisionDataFetcherApplication {
-    Logger logger = Logger.getLogger(Handler.class.getName());
+    Logger logger = Logger.getLogger("SeaVisionDataFetcherApplication");
 
-    final
-    Handler handler;
-
-    public SeaVisionDataFetcherApplication(Handler handler) {
-        this.handler = handler;
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(SeaVisionDataFetcherApplication.class, args);
     }
 
     @Bean
-    public Function<String,String> handle() {
+    public Function<String,String> handle(Handler handler) {
         logger.info("handle() called");
-        this.handler.handleRequest();
-        return null;
+        return value->handler.handleRequest();
     }
 }

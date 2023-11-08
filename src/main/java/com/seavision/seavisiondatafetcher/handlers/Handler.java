@@ -1,4 +1,4 @@
-package com.seavision.seavisiondatafetcher;
+package com.seavision.seavisiondatafetcher.handlers;
 
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
 import com.seavision.seavisiondatafetcher.entities.Locations;
