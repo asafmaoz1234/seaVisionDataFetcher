@@ -7,10 +7,8 @@ import com.seavision.seavisiondatafetcher.repositories.LocationsRepository;
 import com.seavision.seavisiondatafetcher.services.DataProcessorService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -49,16 +47,14 @@ public class Handler {
                 .flatMap(location -> weatherDataFetcherClient.fetchData(location.getLatitude(), location.getLongitude())
                         .subscribeOn(Schedulers.parallel())
                 );
-        this.getdata(responses).block();
+        // Collect responses into a List<FetchedData>
+        List<FetchedData> fetchedDataList = responses.collectList().block(); // Block until all responses are received
 
+        System.out.println("results size: " + fetchedDataList.size());
 
+        // Process the fetched data
+        fetchedDataList.forEach(dataProcessorService::processData);
         return "Done";
     }
 
-    private Mono<String> getdata(Flux<FetchedData> responses) {
-        return Mono.defer(() -> responses.doOnNext(response -> {
-            System.out.println("Received response: " + response.getMeta().toString());
-            dataProcessorService.processData(response);
-        }).then(Mono.just("Done")));
-    }
 }
