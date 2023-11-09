@@ -7,59 +7,19 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - SPRING_PROFILES_ACTIVE=test
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db_test:5432/metrics-data
       - SPRING_DATASOURCE_USERNAME=metrics-data
       - SPRING_DATASOURCE_PASSWORD=compose-postgres
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    env_file:
-      - src/test/resources/application.properties
     depends_on:
       - db_test
 
   db_test:
-    image: postgres:13.1-alpine
+    image: postgres:alpine
     container_name: db_dest
     ports:
       - "5432:5432"
     environment:
-      - SPRING_PROFILES_ACTIVE=test
       - POSTGRES_USER=metrics-data
       - POSTGRES_PASSWORD=compose-postgres
-    env_file:
-      - src/test/resources/application.properties
-#    volumes:
-#      - db_test_data:/var/lib/postgresql/data
 
-  seavisiondatafetcher_prod:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=${DB_URL}/${POSTGRES_USER}
-      - SPRING_DATASOURCE_USERNAME:${POSTGRES_USER}
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    env_file:
-      - src/main/resources/application.properties
-    depends_on:
-      - db_prod
-
-  db_prod:
-    image: postgres:13.1-alpine
-    container_name: db_prod
-    ports:
-      - "5432:5432"
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    env_file:
-      - src/main/resources/application.properties
-#    volumes:
-#       - db_prod_data:/var/lib/postgresql/data
-#
-#volumes:
-#  db_test_data:
-#  db_prod_data:
