@@ -9,6 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # Define services needed for testing
+    services:
+      your_service_name:
+        image: postgres:alpine
+        ports:
+          - 5432:5432
+        env:
+          - POSTGRES_USER=metrics-data
+          - POSTGRES_PASSWORD=compose-postgres
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
