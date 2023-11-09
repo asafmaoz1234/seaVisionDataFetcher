@@ -17,7 +17,7 @@ import java.io.FileReader;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@ActiveProfiles("test")
+@ActiveProfiles("dev")
 public abstract class BaseTest {
 
     @Value("${weather-client.base-url}")
