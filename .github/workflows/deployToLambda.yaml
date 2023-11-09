@@ -1,0 +1,42 @@
+name: Deploy to lambda
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+          cache: maven
+
+      - name: Package to jar
+        run: mvn clean package
+
+      - name: Upload aws Build Artifact to S3
+        run: |
+          aws s3 cp target/seaVisionDataFetcher-0.0.1-SNAPSHOT-aws.jar s3://seavisiondatafetcher/
+
+      - name: Update AWS Lambda function to use the uploaded JAR
+        run: |
+          aws lambda update-function-code --function-name seaVisionDataFetcher --s3-bucket seavisiondatafetcher --s3-key seaVisionDataFetcher-0.0.1-SNAPSHOT-aws.jar
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          API_AUTH_KEY: ${{ secrets.API_AUTH_KEY }}
+          API_REQUEST_PARAMS: ${{ secrets.API_REQUEST_PARAMS }}
+          API_REQUEST_SOURCE: ${{ secrets.API_REQUEST_SOURCE }}
+          WEATHER_API_BASE_URL: ${{ secrets.WEATHER_API_BASE_URL }}
