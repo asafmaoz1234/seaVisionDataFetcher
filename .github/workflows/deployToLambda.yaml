@@ -26,8 +26,8 @@ jobs:
         run: mvn clean package
 
       - name: Upload aws Build Artifact to S3
-          run: |
-            aws s3 cp target/seaVisionDataFetcher-0.0.1-SNAPSHOT-aws.jar s3://seavisiondatafetcher/
+        run: |
+          aws s3 cp target/seaVisionDataFetcher-0.0.1-SNAPSHOT-aws.jar s3://seavisiondatafetcher/
 
       - name: Update AWS Lambda function to use the uploaded JAR
         run: |
