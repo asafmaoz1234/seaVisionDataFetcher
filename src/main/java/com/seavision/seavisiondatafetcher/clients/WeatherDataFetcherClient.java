@@ -45,7 +45,7 @@ public class WeatherDataFetcherClient {
                 .onStatus(httpStatusCode -> httpStatusCode.isSameCodeAs(HttpStatus.FORBIDDEN), this::handleClientAuthError)
                 .onStatus(HttpStatusCode::is5xxServerError, this::handleServerError)
                 .bodyToMono(FetchedData.class)
-                .timeout(Duration.ofSeconds(2));
+                .timeout(Duration.ofSeconds(7));
     }
 
     URI buildUri(String latitude, String longitude) {
