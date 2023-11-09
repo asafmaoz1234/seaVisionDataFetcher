@@ -37,7 +37,7 @@ jobs:
 
       - name: Upload aws Build Artifact to S3
         run: |
-          aws s3 cp ./target/seaVisionDataFetcher-0.0.1-SNAPSHOT-aws.jar s3://seavisiondatafetcher/seaVisionDataFetcher-0.0.1-SNAPSHOT-aws.jar
+          aws s3 cp /target/seaVisionDataFetcher-0.0.1-SNAPSHOT-aws.jar s3://seavisiondatafetcher/seaVisionDataFetcher-0.0.1-SNAPSHOT-aws.jar
 
       - name: Update AWS Lambda function to use the uploaded JAR
         run: |
