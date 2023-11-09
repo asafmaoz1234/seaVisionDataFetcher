@@ -11,6 +11,16 @@ jobs:
   if_merged:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+
+    services:
+      db_test:
+        image: postgres:alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: metrics-data
+          POSTGRES_PASSWORD: compose-postgres
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
