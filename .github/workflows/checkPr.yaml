@@ -11,7 +11,7 @@ jobs:
 
     # Define services needed for testing
     services:
-      your_service_name:
+      db_test:
         image: postgres:alpine
         ports:
           - 5432:5432
