@@ -3,6 +3,7 @@ package com.seavision.seavisiondatafetcher.handlers;
 import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
 import com.seavision.seavisiondatafetcher.entities.Locations;
+import com.seavision.seavisiondatafetcher.exceptions.DbException;
 import com.seavision.seavisiondatafetcher.repositories.LocationsRepository;
 import com.seavision.seavisiondatafetcher.services.DataProcessorService;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,8 @@ public class Handler {
     final
     LocationsRepository locationsRepository;
 
-    final WeatherDataFetcherClient weatherDataFetcherClient;
+    final
+    WeatherDataFetcherClient weatherDataFetcherClient;
 
     public Handler(DataProcessorService dataProcessorService, LocationsRepository locationsRepository, WeatherDataFetcherClient weatherDataFetcherClient) {
         this.dataProcessorService = dataProcessorService;
@@ -30,31 +32,32 @@ public class Handler {
         this.weatherDataFetcherClient = weatherDataFetcherClient;
     }
 
-    public String handleRequest() {
-        List<Locations> locations = null;
+    public String handleRequest() throws DbException {
+        List<Locations> locations;
         try {
             locations = locationsRepository.findAll();
-            logger.info("locations size: " + locations.size());
+            logger.info("found "+ locations.size() +"locations");
         } catch (Exception e) {
             logger.severe("failed locationsRepository.findAll(): " + e.getMessage());
-            throw new RuntimeException(e);
+            throw new DbException(e.getMessage());
+        }
+        if(locations.isEmpty()) {
+            logger.severe("Empty locations");
+            return "Empty locations";
         }
         // Convert the list of locations to a Flux
         Flux<Locations> requests = Flux.fromIterable(locations);
-        logger.info("converted to flux");
-        // Use flatMap to send requests based on latitude and longitude
         Flux<FetchedData> responses = requests
                 .flatMap(location -> weatherDataFetcherClient.fetchData(location.getLatitude(), location.getLongitude())
                         .subscribeOn(Schedulers.parallel())
                 );
-        // Collect responses into a List<FetchedData>
         List<FetchedData> fetchedDataList = responses.collectList().block(); // Block until all responses are received
-
-        System.out.println("results size: " + fetchedDataList.size());
-
-        // Process the fetched data
-        fetchedDataList.forEach(dataProcessorService::processData);
-        return "Done";
+        if (fetchedDataList != null && !fetchedDataList.isEmpty()) {
+            logger.info("found: " + fetchedDataList.size() + " responses");
+            fetchedDataList.forEach(dataProcessorService::processData);
+            return "Successful Done";
+        }
+        return "Empty results Done";
     }
 
 }

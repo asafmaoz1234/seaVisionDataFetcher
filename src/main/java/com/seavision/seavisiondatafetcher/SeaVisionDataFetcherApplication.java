@@ -1,5 +1,6 @@
 package com.seavision.seavisiondatafetcher;
 
+import com.seavision.seavisiondatafetcher.exceptions.DbException;
 import com.seavision.seavisiondatafetcher.handlers.Handler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,6 +21,12 @@ public class SeaVisionDataFetcherApplication {
     @Bean
     public Function<String,String> handle(Handler handler) {
         logger.info("handle() called");
-        return value->handler.handleRequest();
+        return value-> {
+            try {
+                return handler.handleRequest();
+            } catch (DbException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
 }
