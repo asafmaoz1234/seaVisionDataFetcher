@@ -26,6 +26,10 @@ public class DataProcessorService {
     }
 
     public void processData(FetchedData fetchedData) {
+        if (fetchedData == null || fetchedData.getHours() == null || fetchedData.getHours().isEmpty() || fetchedData.getMeta() == null) {
+            logger.info("No data to process");
+            return;
+        }
         List<WeatherData> weatherDataList = this.extractWeatherData(fetchedData.getHours(), fetchedData.getMeta());
         logger.info("Saving " + weatherDataList.size() + " records");
         this.weatherRepository.saveAll(weatherDataList);
