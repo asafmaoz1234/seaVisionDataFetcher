@@ -2,6 +2,7 @@ package com.seavision.seavisiondatafetcher.handlers;
 
 import com.seavision.seavisiondatafetcher.BaseTest;
 import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
+import com.seavision.seavisiondatafetcher.entities.Locations;
 import com.seavision.seavisiondatafetcher.exceptions.DbException;
 import com.seavision.seavisiondatafetcher.repositories.LocationsRepository;
 import com.seavision.seavisiondatafetcher.services.DataProcessorService;
@@ -9,8 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Mono;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,6 +35,14 @@ public class HandlerTest extends BaseTest {
 
     @Mock
     private WeatherDataFetcherClient weatherDataFetcherClient;
+
+    List<Locations> locations = Arrays.asList(
+            new Locations().setLocationName("north")
+                    .setLatitude("53.3498")
+                    .setLongitude("6.2603"),
+            new Locations().setLocationName("south")
+                    .setLatitude("52.3498")
+                    .setLongitude("5.2603"));
 
     @BeforeEach
     public void setUp() {
@@ -53,5 +66,23 @@ public class HandlerTest extends BaseTest {
         verify(dataProcessorService, never()).processData(any());
     }
 
+    @Test
+    public void successfulRequest() throws DbException, IOException {
+        when(locationsRepository.findAll()).thenReturn(this.locations);
+        when(weatherDataFetcherClient.fetchData(anyString(), anyString())).thenReturn(Mono.just(this.loadSampleFetchedData()));
+        String response = handler.handleRequest();
+        assertEquals("Successful Done", response);
+        verify(locationsRepository).findAll();
+        verify(dataProcessorService, times(locations.size())).processData(any());
+    }
+
+    @Test
+    public void successfulRequest_emptyFetched() throws DbException, IOException {
+        when(locationsRepository.findAll()).thenReturn(this.locations);
+        when(weatherDataFetcherClient.fetchData(anyString(), anyString())).thenReturn(Mono.empty());
+        String response = handler.handleRequest();
+        assertEquals("Empty results Done", response);
+        verify(dataProcessorService, never()).processData(any());
+    }
 
 }

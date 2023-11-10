@@ -42,7 +42,7 @@ public class Handler {
             throw new DbException(e.getMessage());
         }
         if(locations.isEmpty()) {
-            logger.info("Empty locations");
+            logger.severe("Empty locations");
             return "Empty locations";
         }
         // Convert the list of locations to a Flux
@@ -52,7 +52,7 @@ public class Handler {
                         .subscribeOn(Schedulers.parallel())
                 );
         List<FetchedData> fetchedDataList = responses.collectList().block(); // Block until all responses are received
-        if (fetchedDataList != null) {
+        if (fetchedDataList != null && !fetchedDataList.isEmpty()) {
             logger.info("found: " + fetchedDataList.size() + " responses");
             fetchedDataList.forEach(dataProcessorService::processData);
             return "Successful Done";
