@@ -33,31 +33,45 @@ public class Handler {
     }
 
     public String handleRequest() throws DbException {
-        List<Locations> locations;
-        try {
-            locations = locationsRepository.findAll();
-            logger.info("found "+ locations.size() +"locations");
-        } catch (Exception e) {
-            logger.severe("failed locationsRepository.findAll(): " + e.getMessage());
-            throw new DbException(e.getMessage());
-        }
-        if(locations.isEmpty()) {
-            logger.severe("Empty locations");
+        List<Locations> locations = fetchLocations();
+        if (locations.isEmpty()) {
+            this.logger.severe("Empty locations");
             return "Empty locations";
         }
-        // Convert the list of locations to a Flux
-        Flux<Locations> requests = Flux.fromIterable(locations);
-        Flux<FetchedData> responses = requests
-                .flatMap(location -> weatherDataFetcherClient.fetchData(location.getLatitude(), location.getLongitude())
-                        .subscribeOn(Schedulers.parallel())
-                );
-        List<FetchedData> fetchedDataList = responses.collectList().block(); // Block until all responses are received
-        if (fetchedDataList != null && !fetchedDataList.isEmpty()) {
-            logger.info("found: " + fetchedDataList.size() + " responses");
-            fetchedDataList.forEach(dataProcessorService::processData);
-            return "Successful Done";
+
+        List<FetchedData> fetchedDataList = fetchWeatherData(locations);
+        if (fetchedDataList.isEmpty()) {
+            return "Empty results Done";
         }
-        return "Empty results Done";
+
+        processFetchedData(fetchedDataList);
+        return "Successful Done";
+    }
+
+    private List<Locations> fetchLocations() throws DbException {
+        try {
+            List<Locations> locations = locationsRepository.findAll();
+            this.logger.info("Found " + locations.size() + " locations");
+            return locations;
+        } catch (Exception e) {
+            this.logger.severe("Failed locationsRepository.findAll(): " + e.getMessage());
+            throw new DbException(e.getMessage());
+        }
+    }
+
+    private List<FetchedData> fetchWeatherData(List<Locations> locations) {
+        Flux<Locations> requests = Flux.fromIterable(locations);
+        Flux<FetchedData> responses = requests.flatMap(location ->
+                weatherDataFetcherClient.fetchData(location.getLatitude(), location.getLongitude())
+                        .subscribeOn(Schedulers.parallel())
+        );
+
+        return responses.collectList().block(); // Block until all responses are received
+    }
+
+    private void processFetchedData(List<FetchedData> fetchedDataList) {
+        this.logger.info("Found: " + fetchedDataList.size() + " responses");
+        fetchedDataList.forEach(dataProcessorService::processData);
     }
 
 }
