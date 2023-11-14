@@ -14,12 +14,9 @@ allowing us to assess sea visibility conditions effectively.<br>
 
 <div>
   <p>The process system design:</p>
-
-[//]: # (  <p align="center">)
-
-[//]: # (    <img src="https://github.com/asafmaoz1234/website/blob/main/images/lambda-beach-time.png">)
-
-[//]: # (  </p>)
+  <p align="center">
+            <img src="https://asafmaoz.com/images/datafetchersysdesign.png">
+        </p>
 </div>
 <div>To do:</div>
 <pre>
