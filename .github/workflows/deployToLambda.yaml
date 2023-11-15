@@ -46,6 +46,9 @@ jobs:
 
       - name: Package to jar
         run: mvn clean package
+        env:
+          AWS_ACCESS_KEY_ID: 000000000000
+          AWS_SECRET_ACCESS_KEY: secretkey
 
       - name: List files in target directory
         run: ls -l /home/runner/work/seaVisionDataFetcher/seaVisionDataFetcher/target/
