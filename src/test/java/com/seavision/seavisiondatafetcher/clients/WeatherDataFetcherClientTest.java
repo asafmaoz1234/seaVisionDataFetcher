@@ -24,7 +24,6 @@ import java.time.Instant;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
-@SpringBootTest
 public class WeatherDataFetcherClientTest extends BaseTest {
 
     @Autowired
