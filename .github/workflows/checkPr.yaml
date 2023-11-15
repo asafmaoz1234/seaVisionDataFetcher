@@ -24,7 +24,7 @@ jobs:
           - 4566:4566
           - 4571:4571
         env:
-          - SERVICES=sqs
+          SERVICES: sqs
 
     steps:
       - name: Checkout repository
