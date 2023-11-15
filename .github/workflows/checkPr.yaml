@@ -18,6 +18,13 @@ jobs:
         env:
           POSTGRES_USER: metrics-data
           POSTGRES_PASSWORD: compose-postgres
+      sqs_test:
+        image: localstack/localstack:latest
+        ports:
+          - 4566:4566
+          - 4571:4571
+        environment:
+          - SERVICES=sqs
 
     steps:
       - name: Checkout repository
