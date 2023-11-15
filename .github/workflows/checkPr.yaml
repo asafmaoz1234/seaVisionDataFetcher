@@ -25,6 +25,8 @@ jobs:
           - 4571:4571
         env:
           SERVICES: sqs
+          AWS_ACCESS_KEY_ID: 000000000000
+          AWS_SECRET_ACCESS_KEY: secretkey
 
     steps:
       - name: Checkout repository
