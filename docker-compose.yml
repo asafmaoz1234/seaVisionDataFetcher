@@ -15,6 +15,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=secretkey
     depends_on:
       - db_test
+      - sqs_test
 
   db_test:
     image: postgres:alpine
@@ -32,5 +33,3 @@ services:
       - "4571:4571"
     environment:
       - SERVICES=sqs
-      - DEFAULT_REGION=us-east-1
-      - EDGE_PORT=4566
