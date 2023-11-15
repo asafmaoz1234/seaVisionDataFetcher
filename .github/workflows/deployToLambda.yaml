@@ -28,7 +28,7 @@ jobs:
         ports:
           - 4566:4566
           - 4571:4571
-        environment:
+        env:
           - SERVICES=sqs
 
     steps:
