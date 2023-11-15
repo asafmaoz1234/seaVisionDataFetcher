@@ -1,5 +1,6 @@
 package com.seavision.seavisiondatafetcher.handlers;
 
+import com.seavision.seavisiondatafetcher.clients.SqsClient;
 import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
 import com.seavision.seavisiondatafetcher.entities.Locations;
@@ -26,25 +27,33 @@ public class Handler {
     final
     WeatherDataFetcherClient weatherDataFetcherClient;
 
-    public Handler(DataProcessorService dataProcessorService, LocationsRepository locationsRepository, WeatherDataFetcherClient weatherDataFetcherClient) {
+    final
+    SqsClient sqsClient;
+
+    public Handler(DataProcessorService dataProcessorService, LocationsRepository locationsRepository, WeatherDataFetcherClient weatherDataFetcherClient, SqsClient sqsClient) {
         this.dataProcessorService = dataProcessorService;
         this.locationsRepository = locationsRepository;
         this.weatherDataFetcherClient = weatherDataFetcherClient;
+        this.sqsClient = sqsClient;
     }
 
     public String handleRequest() throws DbException {
         List<Locations> locations = fetchLocations();
         if (locations.isEmpty()) {
             this.logger.severe("Empty locations");
+            this.sqsClient.publishMessage(null, "Empty locations");
             return "Empty locations";
         }
 
         List<FetchedData> fetchedDataList = fetchWeatherData(locations);
         if (fetchedDataList.isEmpty()) {
+            this.logger.severe("Empty results");
+            this.sqsClient.publishMessage(null, "Empty results");
             return "Empty results Done";
         }
 
         processFetchedData(fetchedDataList);
+        this.sqsClient.publishMessage(null, "Successful Done");
         return "Successful Done";
     }
 
@@ -55,6 +64,7 @@ public class Handler {
             return locations;
         } catch (Exception e) {
             this.logger.severe("Failed locationsRepository.findAll(): " + e.getMessage());
+            this.sqsClient.publishMessage(null, "DB ERROR");
             throw new DbException(e.getMessage());
         }
     }

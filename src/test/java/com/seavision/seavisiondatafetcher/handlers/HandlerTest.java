@@ -1,6 +1,7 @@
 package com.seavision.seavisiondatafetcher.handlers;
 
 import com.seavision.seavisiondatafetcher.BaseTest;
+import com.seavision.seavisiondatafetcher.clients.SqsClient;
 import com.seavision.seavisiondatafetcher.clients.WeatherDataFetcherClient;
 import com.seavision.seavisiondatafetcher.entities.Locations;
 import com.seavision.seavisiondatafetcher.exceptions.DbException;
@@ -36,6 +37,9 @@ public class HandlerTest extends BaseTest {
     @Mock
     private WeatherDataFetcherClient weatherDataFetcherClient;
 
+    @Mock
+    private SqsClient sqsClient;
+
     List<Locations> locations = Arrays.asList(
             new Locations().setLocationName("north")
                     .setLatitude("53.3498")
@@ -47,7 +51,7 @@ public class HandlerTest extends BaseTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        handler = new Handler(dataProcessorService, locationsRepository, weatherDataFetcherClient);
+        handler = new Handler(dataProcessorService, locationsRepository, weatherDataFetcherClient, sqsClient);
     }
 
     @Test
@@ -57,6 +61,7 @@ public class HandlerTest extends BaseTest {
         assertEquals("Empty locations", response);
         verify(locationsRepository).findAll();
         verify(dataProcessorService, never()).processData(any());
+        verify(sqsClient,times(1)).publishMessage(null, "Empty locations");
     }
 
     @Test
@@ -64,6 +69,7 @@ public class HandlerTest extends BaseTest {
         when(locationsRepository.findAll()).thenThrow(new RuntimeException());
         assertThrows(DbException.class, () -> handler.handleRequest());
         verify(dataProcessorService, never()).processData(any());
+        verify(sqsClient, times(1)).publishMessage(null, "DB ERROR");
     }
 
     @Test
@@ -74,15 +80,17 @@ public class HandlerTest extends BaseTest {
         assertEquals("Successful Done", response);
         verify(locationsRepository).findAll();
         verify(dataProcessorService, times(locations.size())).processData(any());
+        verify(sqsClient, times(1)).publishMessage(null, "Successful Done");
     }
 
     @Test
-    public void successfulRequest_emptyFetched() throws DbException, IOException {
+    public void successfulRequest_emptyFetched() throws DbException {
         when(locationsRepository.findAll()).thenReturn(this.locations);
         when(weatherDataFetcherClient.fetchData(anyString(), anyString())).thenReturn(Mono.empty());
         String response = handler.handleRequest();
         assertEquals("Empty results Done", response);
         verify(dataProcessorService, never()).processData(any());
+        verify(sqsClient, times(1)).publishMessage(null, "Empty results");
     }
 
 }
