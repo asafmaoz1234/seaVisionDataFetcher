@@ -64,17 +64,17 @@ public class HandlerTest extends BaseTest {
 
     @Test
     public void emptyLocations_doNothing() throws DbException {
-        doReturn(Collections.emptyList()).when(locationsRepository).findAll();
+        doReturn(Collections.emptyList()).when(locationsRepository).findAllByIsActiveIsTrue();
         String response = handler.handleRequest();
         assertEquals("Empty locations", response);
-        verify(locationsRepository).findAll();
+        verify(locationsRepository).findAllByIsActiveIsTrue();
         verify(dataProcessorService, never()).processData(any(), any());
         verify(sqsClient,times(1)).publishMessage(null, "Empty locations");
     }
 
     @Test
     public void dbException_ExceptionThrown() {
-        when(locationsRepository.findAll()).thenThrow(new RuntimeException());
+        when(locationsRepository.findAllByIsActiveIsTrue()).thenThrow(new RuntimeException());
         assertThrows(DbException.class, () -> handler.handleRequest());
         verify(dataProcessorService, never()).processData(any(), any());
         verify(sqsClient, times(1)).publishMessage(null, "DB ERROR");
@@ -82,18 +82,18 @@ public class HandlerTest extends BaseTest {
 
     @Test
     public void successfulRequest() throws DbException, IOException {
-        when(locationsRepository.findAll()).thenReturn(this.locations);
+        when(locationsRepository.findAllByIsActiveIsTrue()).thenReturn(this.locations);
         when(weatherDataFetcherClient.fetchData(anyString(), anyString())).thenReturn(Mono.just(this.loadSampleFetchedData()));
         String response = handler.handleRequest();
         assertEquals("Successful Done", response);
-        verify(locationsRepository).findAll();
+        verify(locationsRepository).findAllByIsActiveIsTrue();
         verify(dataProcessorService, times(locations.size())).processData(any(), any());
         verify(sqsClient, times(1)).publishMessage(null, "Successful Done");
     }
 
     @Test
     public void successfulRequest_emptyFetched() throws DbException {
-        when(locationsRepository.findAll()).thenReturn(this.locations);
+        when(locationsRepository.findAllByIsActiveIsTrue()).thenReturn(this.locations);
         when(weatherDataFetcherClient.fetchData(anyString(), anyString())).thenReturn(Mono.empty());
         String response = handler.handleRequest();
         assertEquals("Empty results Done", response);

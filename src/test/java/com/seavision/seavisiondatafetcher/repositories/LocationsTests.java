@@ -39,7 +39,7 @@ public class LocationsTests extends BaseTest {
 
     @Test
     public void findAllLocations() {
-        List<Locations> response = locationsRepository.findAll();
+        List<Locations> response = locationsRepository.findAllByIsActiveIsTrue();
         assertEquals(response.size(), this.locations.size());
     }
 
