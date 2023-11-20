@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 public class HandlerTest extends BaseTest {
 
-
+//    @Autowired
     private Handler handler;
 
     @Mock
@@ -43,10 +44,12 @@ public class HandlerTest extends BaseTest {
     List<Locations> locations = Arrays.asList(
             new Locations().setLocationName("north")
                     .setLatitude("53.3498")
-                    .setLongitude("6.2603"),
+                    .setLongitude("6.2603")
+                    .setId(1L),
             new Locations().setLocationName("south")
                     .setLatitude("52.3498")
-                    .setLongitude("5.2603"));
+                    .setLongitude("5.2603")
+                    .setId(2L));
 
     @BeforeEach
     public void setUp() {
@@ -54,42 +57,47 @@ public class HandlerTest extends BaseTest {
         handler = new Handler(dataProcessorService, locationsRepository, weatherDataFetcherClient, sqsClient);
     }
 
+//    @Test
+//    public void fullFlow_success() throws DbException {
+//        this.handler.handleRequest();
+//    }
+
     @Test
     public void emptyLocations_doNothing() throws DbException {
-        doReturn(Collections.emptyList()).when(locationsRepository).findAll();
+        doReturn(Collections.emptyList()).when(locationsRepository).findAllByIsActiveIsTrue();
         String response = handler.handleRequest();
         assertEquals("Empty locations", response);
-        verify(locationsRepository).findAll();
-        verify(dataProcessorService, never()).processData(any());
+        verify(locationsRepository).findAllByIsActiveIsTrue();
+        verify(dataProcessorService, never()).processData(any(), any());
         verify(sqsClient,times(1)).publishMessage(null, "Empty locations");
     }
 
     @Test
     public void dbException_ExceptionThrown() {
-        when(locationsRepository.findAll()).thenThrow(new RuntimeException());
+        when(locationsRepository.findAllByIsActiveIsTrue()).thenThrow(new RuntimeException());
         assertThrows(DbException.class, () -> handler.handleRequest());
-        verify(dataProcessorService, never()).processData(any());
+        verify(dataProcessorService, never()).processData(any(), any());
         verify(sqsClient, times(1)).publishMessage(null, "DB ERROR");
     }
 
     @Test
     public void successfulRequest() throws DbException, IOException {
-        when(locationsRepository.findAll()).thenReturn(this.locations);
+        when(locationsRepository.findAllByIsActiveIsTrue()).thenReturn(this.locations);
         when(weatherDataFetcherClient.fetchData(anyString(), anyString())).thenReturn(Mono.just(this.loadSampleFetchedData()));
         String response = handler.handleRequest();
         assertEquals("Successful Done", response);
-        verify(locationsRepository).findAll();
-        verify(dataProcessorService, times(locations.size())).processData(any());
+        verify(locationsRepository).findAllByIsActiveIsTrue();
+        verify(dataProcessorService, times(locations.size())).processData(any(), any());
         verify(sqsClient, times(1)).publishMessage(null, "Successful Done");
     }
 
     @Test
     public void successfulRequest_emptyFetched() throws DbException {
-        when(locationsRepository.findAll()).thenReturn(this.locations);
+        when(locationsRepository.findAllByIsActiveIsTrue()).thenReturn(this.locations);
         when(weatherDataFetcherClient.fetchData(anyString(), anyString())).thenReturn(Mono.empty());
         String response = handler.handleRequest();
         assertEquals("Empty results Done", response);
-        verify(dataProcessorService, never()).processData(any());
+        verify(dataProcessorService, never()).processData(any(), any());
         verify(sqsClient, times(1)).publishMessage(null, "Empty results");
     }
 

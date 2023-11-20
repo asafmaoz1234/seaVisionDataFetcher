@@ -14,6 +14,8 @@ public class Locations {
     private String latitude;
     @Column(name = "location_name", nullable = false)
     private String locationName;
+    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean isActive = true;
 
     public Locations() {
         super();
@@ -21,6 +23,11 @@ public class Locations {
 
     public Long getId() {
         return id;
+    }
+
+    public Locations setId(Long id) {
+        this.id = id;
+        return this;
     }
 
     public Locations setLongitude(String longitude) {
@@ -50,6 +57,16 @@ public class Locations {
         return locationName;
     }
 
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public Locations setActive(Boolean active) {
+        isActive = active;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Locations{" +
@@ -57,6 +74,7 @@ public class Locations {
                 ", longitude='" + longitude + '\'' +
                 ", latitude='" + latitude + '\'' +
                 ", locationName='" + locationName + '\'' +
+                ", isActive=" + isActive +
                 '}';
     }
 }
