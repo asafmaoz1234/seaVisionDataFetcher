@@ -2,7 +2,6 @@ package com.seavision.seavisiondatafetcher.services;
 
 import com.seavision.seavisiondatafetcher.dtos.DataPerHour;
 import com.seavision.seavisiondatafetcher.dtos.FetchedData;
-import com.seavision.seavisiondatafetcher.dtos.Meta;
 import com.seavision.seavisiondatafetcher.entities.WeatherData;
 import com.seavision.seavisiondatafetcher.pojos.GeneralUtilities;
 import com.seavision.seavisiondatafetcher.repositories.WeatherRepository;
@@ -23,23 +22,22 @@ public class DataProcessorService {
         this.weatherRepository = weatherRepository;
     }
 
-    public void processData(FetchedData fetchedData) {
+    public void processData(FetchedData fetchedData, Long locationId) {
         if (fetchedData == null || fetchedData.getHours() == null || fetchedData.getHours().isEmpty() || fetchedData.getMeta() == null) {
             logger.info("No data to process");
             return;
         }
-        List<WeatherData> weatherDataList = this.extractWeatherData(fetchedData.getHours(), fetchedData.getMeta());
+        List<WeatherData> weatherDataList = this.extractWeatherData(fetchedData.getHours(), locationId);
         logger.info("Saving " + weatherDataList.size() + " records");
         this.weatherRepository.saveAll(weatherDataList);
     }
 
-    private List<WeatherData> extractWeatherData(List<DataPerHour> dataPerHourList, Meta meta) {
+    private List<WeatherData> extractWeatherData(List<DataPerHour> dataPerHourList, Long locationId) {
         return dataPerHourList.stream()
                 .map(dataPerHour -> new WeatherData()
-                        .setLatitude(String.valueOf(meta.getLat()))
-                        .setLongitude(String.valueOf(meta.getLng()))
                         .setMetricsDay(GeneralUtilities.convertToDDMMYYYY(dataPerHour.getTime()))
-                        .setWaveHeight(dataPerHour.getWaveHeight().getNoaa()))
+                        .setWaveHeight(dataPerHour.getWaveHeight().getNoaa())
+                        .setLocationId(locationId))
                 .collect(Collectors.toList());
     }
 

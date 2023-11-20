@@ -43,10 +43,12 @@ public class HandlerTest extends BaseTest {
     List<Locations> locations = Arrays.asList(
             new Locations().setLocationName("north")
                     .setLatitude("53.3498")
-                    .setLongitude("6.2603"),
+                    .setLongitude("6.2603")
+                    .setId(1L),
             new Locations().setLocationName("south")
                     .setLatitude("52.3498")
-                    .setLongitude("5.2603"));
+                    .setLongitude("5.2603")
+                    .setId(2L));
 
     @BeforeEach
     public void setUp() {
@@ -60,7 +62,7 @@ public class HandlerTest extends BaseTest {
         String response = handler.handleRequest();
         assertEquals("Empty locations", response);
         verify(locationsRepository).findAll();
-        verify(dataProcessorService, never()).processData(any());
+        verify(dataProcessorService, never()).processData(any(), any());
         verify(sqsClient,times(1)).publishMessage(null, "Empty locations");
     }
 
@@ -68,7 +70,7 @@ public class HandlerTest extends BaseTest {
     public void dbException_ExceptionThrown() {
         when(locationsRepository.findAll()).thenThrow(new RuntimeException());
         assertThrows(DbException.class, () -> handler.handleRequest());
-        verify(dataProcessorService, never()).processData(any());
+        verify(dataProcessorService, never()).processData(any(), any());
         verify(sqsClient, times(1)).publishMessage(null, "DB ERROR");
     }
 
@@ -79,7 +81,7 @@ public class HandlerTest extends BaseTest {
         String response = handler.handleRequest();
         assertEquals("Successful Done", response);
         verify(locationsRepository).findAll();
-        verify(dataProcessorService, times(locations.size())).processData(any());
+        verify(dataProcessorService, times(locations.size())).processData(any(), any());
         verify(sqsClient, times(1)).publishMessage(null, "Successful Done");
     }
 
@@ -89,7 +91,7 @@ public class HandlerTest extends BaseTest {
         when(weatherDataFetcherClient.fetchData(anyString(), anyString())).thenReturn(Mono.empty());
         String response = handler.handleRequest();
         assertEquals("Empty results Done", response);
-        verify(dataProcessorService, never()).processData(any());
+        verify(dataProcessorService, never()).processData(any(), any());
         verify(sqsClient, times(1)).publishMessage(null, "Empty results");
     }
 

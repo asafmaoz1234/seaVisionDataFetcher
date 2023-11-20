@@ -28,7 +28,7 @@ public class WeatherDataTests extends BaseTest {
     }
     @Test
     public void newLongAndLat_emptyResponse() {
-        List<WeatherData> response = weatherRepository.findByLongitudeAndLatitude(Math.random()+"", Math.random()+"");
+        List<WeatherData> response = weatherRepository.findByLocationId(1L);
         assertEquals(response.size(),0);
     }
     @Test
@@ -38,14 +38,13 @@ public class WeatherDataTests extends BaseTest {
         String metricDay = "21/09/2023-06";
         weatherRepository.save(new WeatherData()
                 .setMetricsDay(metricDay)
-                .setLatitude(lat)
-                .setLongitude(lng)
-                .setWaveHeight(6.5));
-        List<WeatherData> response = weatherRepository.findAllByLongitudeAndLatitudeAndMetricsDay(lng,lat, metricDay);
+                .setWaveHeight(6.5)
+                .setLocationId(1L));
+        List<WeatherData> response = weatherRepository.findAllByLocationIdAndMetricsDay(1L, metricDay);
         assertThat(response.size(), is(equalTo(1)));
-        assertThat(response.get(0).getLatitude(), is(equalTo(lat)));
-        assertThat(response.get(0).getLongitude(), is(equalTo(lng)));
         assertThat(response.get(0).getMetricsDay(), is(equalTo(metricDay)));
+        assertThat(response.get(0).getWaveHeight(), is(equalTo(6.5)));
+        assertThat(response.get(0).getLocationId(), is(equalTo(1L)));
     }
 
     @Test
@@ -53,15 +52,12 @@ public class WeatherDataTests extends BaseTest {
         FetchedData data = this.loadSampleFetchedData();
         List<WeatherData> toSave = data.getHours().stream()
                 .map(dataPerHour -> new WeatherData()
-                        .setLatitude(String.valueOf(data.getMeta().getLat()))
-                        .setLongitude(String.valueOf(data.getMeta().getLng()))
                         .setMetricsDay(GeneralUtilities.convertToDDMMYYYY(dataPerHour.getTime()))
-                        .setWaveHeight(dataPerHour.getWaveHeight().getNoaa()))
+                        .setWaveHeight(dataPerHour.getWaveHeight().getNoaa())
+                        .setLocationId(1L))
                 .collect(Collectors.toList());
         weatherRepository.saveAll(toSave);
-        List<WeatherData> response = weatherRepository.findByLongitudeAndLatitude(
-                String.valueOf(data.getMeta().getLng()),
-                String.valueOf(data.getMeta().getLat()));
+        List<WeatherData> response = weatherRepository.findByLocationId(1L);
         assertThat(response.size(), is(equalTo(73)));
     }
 }

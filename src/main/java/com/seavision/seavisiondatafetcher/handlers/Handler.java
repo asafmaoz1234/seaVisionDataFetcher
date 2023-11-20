@@ -12,6 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Service
@@ -45,7 +46,7 @@ public class Handler {
             return "Empty locations";
         }
 
-        List<FetchedData> fetchedDataList = fetchWeatherData(locations);
+        Map<Long, FetchedData> fetchedDataList = fetchWeatherData(locations);
         if (fetchedDataList.isEmpty()) {
             this.logger.severe("Empty results");
             this.sqsClient.publishMessage(null, "Empty results");
@@ -69,19 +70,24 @@ public class Handler {
         }
     }
 
-    private List<FetchedData> fetchWeatherData(List<Locations> locations) {
+    private Map<Long, FetchedData> fetchWeatherData(List<Locations> locations) {
         Flux<Locations> requests = Flux.fromIterable(locations);
-        Flux<FetchedData> responses = requests.flatMap(location ->
+        Flux<LocationDataPair> responses = requests.flatMap(location ->
                 weatherDataFetcherClient.fetchData(location.getLatitude(), location.getLongitude())
                         .subscribeOn(Schedulers.parallel())
+                        .map(data -> new LocationDataPair(location.getId(), data))
         );
 
-        return responses.collectList().block(); // Block until all responses are received
+        return responses.collectMap(LocationDataPair::locationId, LocationDataPair::fetchedData).block();
     }
 
-    private void processFetchedData(List<FetchedData> fetchedDataList) {
-        this.logger.info("Found: " + fetchedDataList.size() + " responses");
-        fetchedDataList.forEach(dataProcessorService::processData);
+
+    private void processFetchedData(Map<Long, FetchedData> fetchedDataMap) {
+        this.logger.info("Found: " + fetchedDataMap.size() + " responses");
+        fetchedDataMap.forEach((locationId, locationData) ->
+                this.dataProcessorService.processData(locationData, locationId));
     }
 
+    private record LocationDataPair(Long locationId, FetchedData fetchedData) {
+    }
 }

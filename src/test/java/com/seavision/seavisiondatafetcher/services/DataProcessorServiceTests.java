@@ -36,33 +36,32 @@ public class DataProcessorServiceTests extends BaseTest {
     @Test
     public void validFetchedData_saveAllCalled() throws IOException {
         FetchedData fetchedData = this.loadSampleFetchedData();
-        this.dataProcessorService.processData(fetchedData);
+        this.dataProcessorService.processData(fetchedData, 1L);
         verify(this.weatherRepository, times(1)).saveAll(any());
     }
 
     @Test
     public void validFetchedData_validListToSaveAll() throws IOException {
         FetchedData fetchedData = this.loadSampleFetchedData();
-        this.dataProcessorService.processData(fetchedData);
+        this.dataProcessorService.processData(fetchedData, 1L);
 
         verify(this.weatherRepository).saveAll(weatherDataListCaptor.capture());
         List<WeatherData> capturedWeatherDataList = weatherDataListCaptor.getValue();
 
         assertEquals(capturedWeatherDataList.size(), fetchedData.getHours().size());
-        assertEquals(capturedWeatherDataList.get(0).getLatitude(), String.valueOf(fetchedData.getMeta().getLat()));
         assertEquals(capturedWeatherDataList.get(4).getWaveHeight(), fetchedData.getHours().get(4).getWaveHeight().getNoaa());
     }
 
     @Test
     public void emptyFetchedData_saveAllNotCalled() {
         FetchedData fetchedData = new FetchedData();
-        this.dataProcessorService.processData(fetchedData);
+        this.dataProcessorService.processData(fetchedData, 1L);
         verify(this.weatherRepository, Mockito.never()).saveAll(weatherDataListCaptor.capture());
     }
 
     @Test
     public void nullFetchedData_saveAllNotCalled() {
-        this.dataProcessorService.processData(null);
+        this.dataProcessorService.processData(null, 1L);
         verify(this.weatherRepository, Mockito.never()).saveAll(weatherDataListCaptor.capture());
     }
 }
