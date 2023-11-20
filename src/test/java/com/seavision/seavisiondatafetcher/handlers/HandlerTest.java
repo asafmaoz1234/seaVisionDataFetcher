@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 public class HandlerTest extends BaseTest {
 
-
+//    @Autowired
     private Handler handler;
 
     @Mock
@@ -55,6 +56,11 @@ public class HandlerTest extends BaseTest {
         MockitoAnnotations.openMocks(this);
         handler = new Handler(dataProcessorService, locationsRepository, weatherDataFetcherClient, sqsClient);
     }
+
+//    @Test
+//    public void fullFlow_success() throws DbException {
+//        this.handler.handleRequest();
+//    }
 
     @Test
     public void emptyLocations_doNothing() throws DbException {

@@ -60,7 +60,7 @@ public class Handler {
 
     private List<Locations> fetchLocations() throws DbException {
         try {
-            List<Locations> locations = locationsRepository.findAll();
+            List<Locations> locations = locationsRepository.findAllByIsActiveIsTrue();
             this.logger.info("Found " + locations.size() + " locations");
             return locations;
         } catch (Exception e) {
